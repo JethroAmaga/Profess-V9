@@ -1648,8 +1648,8 @@ const FlapCell = ({ target, delay, stepMs, flipDuration }) => {
     };
   }, [target, delay, stepMs]);
 
-  const show = current === " " ? " " : current;
-  const showPrev = prev === " " ? " " : prev;
+  const show = current === " " ? " " : current;
+  const showPrev = prev === " " ? " " : prev;
   const cellTextStyle = { fontSize:"clamp(7px, 1.8vw, 16px)", lineHeight:1, fontFamily:"'Manrope',monospace", fontWeight:700, letterSpacing:"0.03em" };
   const halfBase = { position:"absolute", insetInline:0, overflow:"hidden", background:"#181410", color:"#E9E5DC" };
   const textWrap = { position:"absolute", insetInline:0, display:"flex", alignItems:"center", justifyContent:"center", userSelect:"none", ...cellTextStyle };
@@ -2081,62 +2081,6 @@ export default function Profess() {
   const introJustFinished = useRef(false);
   const landingScrollRef = useRef(null);
   const globeSectionRef = useRef(null);
-  const [landingScrollThumb, setLandingScrollThumb] = useState({ h: 0, top: 0 });
-  const landingScrollTrackRef = useRef(null);
-  useEffect(() => {
-    if (screen !== "landing") return;
-    const el = landingScrollRef.current;
-    if (!el) return;
-    const update = () => {
-      const { scrollTop, scrollHeight, clientHeight } = el;
-      if (scrollHeight <= clientHeight) { setLandingScrollThumb({ h: 0, top: 0 }); return; }
-      const h = Math.max(64, (clientHeight / scrollHeight) * clientHeight);
-      const top = (scrollTop / (scrollHeight - clientHeight)) * (clientHeight - h);
-      setLandingScrollThumb({ h, top });
-    };
-    update();
-    el.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    return () => { el.removeEventListener("scroll", update); window.removeEventListener("resize", update); };
-  }, [screen]);
-  const landingScrollThumbDrag = (downEvent) => {
-    downEvent.preventDefault();
-    const el = landingScrollRef.current;
-    const track = landingScrollTrackRef.current;
-    if (!el || !track) return;
-    const trackH = track.getBoundingClientRect().height;
-    const startY = downEvent.touches ? downEvent.touches[0].clientY : downEvent.clientY;
-    const startScrollTop = el.scrollTop;
-    const move = (e) => {
-      const y = e.touches ? e.touches[0].clientY : e.clientY;
-      const deltaY = y - startY;
-      const maxScroll = el.scrollHeight - el.clientHeight;
-      const thumbH = Math.max(64, (el.clientHeight / el.scrollHeight) * trackH);
-      const scrollPerPixel = maxScroll / (trackH - thumbH);
-      el.scrollTop = Math.max(0, Math.min(maxScroll, startScrollTop + deltaY * scrollPerPixel));
-    };
-    const up = () => {
-      window.removeEventListener("mousemove", move);
-      window.removeEventListener("touchmove", move);
-      window.removeEventListener("mouseup", up);
-      window.removeEventListener("touchend", up);
-    };
-    window.addEventListener("mousemove", move);
-    window.addEventListener("touchmove", move, { passive: false });
-    window.addEventListener("mouseup", up);
-    window.addEventListener("touchend", up);
-  };
-  const landingScrollTrackClick = (e) => {
-    if (e.target !== landingScrollTrackRef.current) return; // ignore clicks on the thumb itself
-    const el = landingScrollRef.current;
-    const track = landingScrollTrackRef.current;
-    if (!el || !track) return;
-    const rect = track.getBoundingClientRect();
-    const clickY = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-    const maxScroll = el.scrollHeight - el.clientHeight;
-    const ratio = clickY / rect.height;
-    el.scrollTop = Math.max(0, Math.min(maxScroll, ratio * maxScroll));
-  };
   const [spinProgress, setSpinProgress] = useState(0);
   const [introPhase, setIntroPhase] = useState("spinning"); // spinning | black | fadein | done
   const handleGlobeSpun = () => {
@@ -3129,23 +3073,6 @@ export default function Profess() {
       <>
       <div ref={landingScrollRef} className="screen-enter" style={{ ...BASE, overflowY:"auto", filter:warmMode?"sepia(0.18) saturate(1.2) brightness(1.02)":"none", transition:"filter 1.2s ease" }}>
         <style>{css}</style>
-        {landingScrollThumb.h > 0 && (
-          <div
-            ref={landingScrollTrackRef}
-            onMouseDown={landingScrollTrackClick}
-            style={{ position:"fixed", top:0, right:"4px", bottom:0, width:"10px", zIndex:1000, pointerEvents:"auto", cursor:"pointer", background:"rgba(200,168,112,0.12)", borderRadius:"5px" }}
-          >
-            <div
-              onMouseDown={landingScrollThumbDrag}
-              onTouchStart={landingScrollThumbDrag}
-              style={{
-                position:"absolute", top: landingScrollThumb.top, left:"-3px", width:"16px", height: landingScrollThumb.h,
-                borderRadius:"5px", background:"repeating-linear-gradient(180deg, #8A6A38 0px, #8A6A38 3px, #7A5C2E 3px, #7A5C2E 6px)",
-                border:"1px solid #6E5328", boxShadow:"0 1px 4px rgba(0,0,0,0.5), inset 0 0 2px rgba(255,255,255,0.15)", cursor:"grab"
-              }}
-            />
-          </div>
-        )}
         {introOverlay}
         <div style={{ position:"fixed", inset:0, pointerEvents:"none", zIndex:-1 }}><DottedGlowBackground/></div>
         <div className="grain-layer"/>
