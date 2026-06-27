@@ -1655,8 +1655,8 @@ const FlapCell = ({ target, delay, stepMs, flipDuration }) => {
     };
   }, [target, delay, stepMs]);
 
-  const show = current === " " ? " " : current;
-  const showPrev = prev === " " ? " " : prev;
+  const show = current === " " ? " " : current;
+  const showPrev = prev === " " ? " " : prev;
   const cellTextStyle = { fontSize:"clamp(7px, 1.8vw, 16px)", lineHeight:1, fontFamily:"'Manrope',monospace", fontWeight:700, letterSpacing:"0.03em" };
   const halfBase = { position:"absolute", insetInline:0, overflow:"hidden", background:"#181410", color:"#E9E5DC" };
   const textWrap = { position:"absolute", insetInline:0, display:"flex", alignItems:"center", justifyContent:"center", userSelect:"none", ...cellTextStyle };
@@ -1807,8 +1807,15 @@ function ConversationMarquee({ isMobile }) {
     return { ...card, svg: buildSVG(charObj, "neutral", false, "role"), accent: charObj.accent };
   }), []);
   const chunkSize = Math.ceil(cards.length / 5);
-  const columns = Array.from({ length: 5 }, (_, colIndex) => cards.slice(colIndex * chunkSize, colIndex * chunkSize + chunkSize));
+  // Each column is duplicated (doubled-up) so it has more rows extending
+  // further down — gives the up/down bob more material to travel through
+  // instead of revealing empty space at the ends.
+  const columns = Array.from({ length: 5 }, (_, colIndex) => {
+    const slice = cards.slice(colIndex * chunkSize, colIndex * chunkSize + chunkSize);
+    return slice.concat(slice);
+  });
   const scale = isMobile ? 0.6 : 1;
+  const amplitude = 150;
 
   return (
     <div style={{ position:"relative", height: isMobile ? "640px" : "1040px", overflow:"hidden", background:"#060606" }}>
@@ -1817,8 +1824,9 @@ function ConversationMarquee({ isMobile }) {
             {columns.map((col, colIndex) => (
               <motion.div
                 key={colIndex}
-                animate={{ y: colIndex % 2 === 0 ? 100 : -100 }}
-                transition={{ duration: colIndex % 2 === 0 ? 10 : 15, repeat: Infinity, repeatType:"reverse", ease:"easeInOut" }}
+                initial={{ y: colIndex % 2 === 0 ? -amplitude : amplitude }}
+                animate={{ y: colIndex % 2 === 0 ? amplitude : -amplitude }}
+                transition={{ duration: colIndex % 2 === 0 ? 12 : 17, repeat: Infinity, repeatType:"reverse", ease:"easeInOut" }}
                 style={{ display:"flex", flexDirection:"column", gap:"32px" }}
               >
                 {col.map((card, i) => (
