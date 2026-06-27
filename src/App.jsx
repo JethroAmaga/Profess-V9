@@ -1466,6 +1466,7 @@ function GlobeCharacterMarker({ lat, lng, radius, charObj, role, hovered, onHove
   // near the top/most-perpendicular part of the sphere.
   const pos = useMemo(() => globeLatLngToVector3(lat, lng, radius * 1.12), [lat, lng, radius]);
   const svg = useMemo(() => buildSVG(charObj, "neutral", false, "role"), [charObj]);
+  const mobilePad = typeof window !== "undefined" && window.innerWidth < 640;
   return (
     <Html position={pos} center occlude={occludeRefs} transform={false} zIndexRange={[60, 0]} style={{ pointerEvents:"auto" }}>
       <div
@@ -1475,8 +1476,10 @@ function GlobeCharacterMarker({ lat, lng, radius, charObj, role, hovered, onHove
         onClick={onTap}
       >
         {/* Invisible hit-area padding, larger than the visible character, so the
-            cursor/tap target is much more forgiving than the 22x28px sprite. */}
-        <div style={{ position:"absolute", top:"-14px", left:"-13px", right:"-13px", bottom:"-14px" }}/>
+            cursor/tap target is much more forgiving than the 22x28px sprite.
+            Mobile gets extra padding since touch targets need more room than
+            a mouse cursor. */}
+        <div style={{ position:"absolute", top: mobilePad ? "-30px" : "-14px", left: mobilePad ? "-26px" : "-13px", right: mobilePad ? "-26px" : "-13px", bottom: mobilePad ? "-30px" : "-14px" }}/>
         {hovered && (
           <div
             style={{
