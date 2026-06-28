@@ -47,7 +47,7 @@ export default async function handler(req, res) {
   // fallback for when qwen's output quality isn't enough. NVIDIA_MODEL env
   // override is intentionally ignored here so a stale env var can't
   // override this choice.
-  const PRIMARY_MODEL = "qwen/qwen-2.5-7b-instruct";
+  const PRIMARY_MODEL = "qwen/qwen2.5-7b-instruct";
   const FALLBACK_MODEL = "deepseek-ai/deepseek-v4-pro";
 
   async function callNvidia(model, nvMessages) {
