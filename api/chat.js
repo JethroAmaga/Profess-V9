@@ -74,22 +74,47 @@ export default async function handler(req, res) {
     }
   }
 
+  const nvMessages = [
+    ...(system ? [{ role: "system", content: system }] : []),
+    ...messages,
+  ];
+
+  // Calls a model and reports whether the caller should retry with the
+  // fallback model: 503/429/500 *and* a timeout (the model hung past 25s)
+  // are both treated as retryable, so a slow/hanging primary doesn't skip
+  // the fallback the way a plain AbortError catch would.
+  async function attempt(model) {
+    try {
+      const { response, data } = await callNvidia(model, nvMessages);
+      if (!response.ok && [503, 429, 500].includes(response.status)) {
+        console.error(`NVIDIA ${model} unavailable (${response.status})`);
+        return { retry: true };
+      }
+      return { retry: false, response, data };
+    } catch (err) {
+      if (err.name === "AbortError") {
+        console.error(`NVIDIA ${model} timed out after 25s`);
+        return { retry: true, timedOut: true };
+      }
+      throw err;
+    }
+  }
+
   try {
     let model = PRIMARY_MODEL;
+    let result = await attempt(model);
 
-    const nvMessages = [
-      ...(system ? [{ role: "system", content: system }] : []),
-      ...messages,
-    ];
-
-    let { response, data } = await callNvidia(model, nvMessages);
-
-    if (!response.ok && (response.status === 503 || response.status === 429 || response.status === 500) && model !== FALLBACK_MODEL) {
-      console.error(`NVIDIA ${model} unavailable (${response.status}), retrying with fallback model ${FALLBACK_MODEL}`);
+    if (result.retry && model !== FALLBACK_MODEL) {
+      console.error(`Retrying with fallback model ${FALLBACK_MODEL}`);
       model = FALLBACK_MODEL;
-      ({ response, data } = await callNvidia(model, nvMessages));
+      result = await attempt(model);
     }
 
+    if (result.retry) {
+      return res.status(result.timedOut ? 504 : 503).json({ error: { message: "AI service unavailable" } });
+    }
+
+    const { response, data } = result;
     if (!response.ok) {
       console.error("NVIDIA API error:", response.status, data);
       return res.status(response.status).json({ error: { message: "AI service unavailable" } });
@@ -97,8 +122,8 @@ export default async function handler(req, res) {
 
     const text = data.choices?.[0]?.message?.content || "";
 
-    // Output guardrail: even though the system prompt instructs z-ai not to
-    // produce this content, the model can be jailbroken — this deterministic
+    // Output guardrail: even though the system prompt instructs the model not
+    // to produce this content, it can be jailbroken — this deterministic
     // check blocks the response from ever reaching the client/TTS regardless.
     if (containsBannedContent(text)) {
       console.error("Blocked banned content in model output");
@@ -107,9 +132,6 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ content: [{ type: "text", text }] });
   } catch (err) {
-    if (err.name === "AbortError") {
-      return res.status(504).json({ error: { message: "NVIDIA API timed out after 25s" } });
-    }
     console.error("chat handler error:", err);
     return res.status(500).json({ error: { message: "Internal server error" } });
   }
