@@ -17,19 +17,31 @@ export default async function handler(req, res) {
       ...messages,
     ];
 
-    const response = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model,
-        messages: nvMessages,
-        max_tokens: 1000,
-        stream: false,
-      }),
-    });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 25000);
+
+    let response;
+    try {
+      response = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
+        method: "POST",
+        signal: controller.signal,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model,
+          messages: nvMessages,
+          max_tokens: 1000,
+          stream: false,
+          // Disable extended chain-of-thought reasoning on DeepSeek-style
+          // "thinking" models — without this, generation can take minutes.
+          chat_template_kwargs: { thinking: false },
+        }),
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
 
     const data = await response.json();
     if (!response.ok) {
@@ -39,6 +51,9 @@ export default async function handler(req, res) {
     const text = data.choices?.[0]?.message?.content || "";
     return res.status(200).json({ content: [{ type: "text", text }] });
   } catch (err) {
+    if (err.name === "AbortError") {
+      return res.status(504).json({ error: { message: "NVIDIA API timed out after 25s" } });
+    }
     return res.status(500).json({ error: { message: "Internal server error" } });
   }
 }
