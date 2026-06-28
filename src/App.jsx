@@ -2291,18 +2291,22 @@ export default function Profess() {
     return () => { clearTimeout(showT); clearTimeout(hideT); };
   }, [screen]);
 
-  const extractRole = (t) => (t.match(/\[ROLE:(\w+)\]/) || [])[1] || null;
-  const extractMood = (t) => (t.match(/\[MOOD:(\w+)\]/) || [])[1] || null;
-  const extractMode = (t) => (t.match(/\[MODE:(\w+)\]/) || [])[1] || null;
-  const extractInner = (t) => { const m = t.match(/\[INNER:(.*?)\]/); return m ? m[1].replace(/\*/g,"").trim() : null; };
-  const extractChar = (t) => { const m = t.match(/\[CHAR:([^\]]+)\]/); return m ? m[1].trim() : null; };
-  const extractTitle = (t) => { const m = t.match(/\[TITLE:([^\]]+)\]/); return m ? m[1].trim() : null; };
-  const extractGender = (t) => { const m = t.match(/\[GENDER:(f|m)\]/); return m ? m[1] : null; };
+  // Models sometimes write a space after the colon (e.g. "[ROLE: examiner]")
+  // despite the prompt's tag examples having none — \s* tolerates both so
+  // the tag is still recognized and stripped instead of leaking into the
+  // visible chat text.
+  const extractRole = (t) => (t.match(/\[ROLE:\s*(\w+)\]/) || [])[1] || null;
+  const extractMood = (t) => (t.match(/\[MOOD:\s*(\w+)\]/) || [])[1] || null;
+  const extractMode = (t) => (t.match(/\[MODE:\s*(\w+)\]/) || [])[1] || null;
+  const extractInner = (t) => { const m = t.match(/\[INNER:\s*(.*?)\]/); return m ? m[1].replace(/\*/g,"").trim() : null; };
+  const extractChar = (t) => { const m = t.match(/\[CHAR:\s*([^\]]+)\]/); return m ? m[1].trim() : null; };
+  const extractTitle = (t) => { const m = t.match(/\[TITLE:\s*([^\]]+)\]/); return m ? m[1].trim() : null; };
+  const extractGender = (t) => { const m = t.match(/\[GENDER:\s*(f|m)\]/); return m ? m[1] : null; };
   const cleanText = (t) => t
-    .replace(/\[ROLE:\w+\]/g,"").replace(/\[MOOD:\w+\]/g,"")
-    .replace(/\[MODE:\w+\]/g,"").replace(/\[INNER:.*?\]/g,"")
-    .replace(/\[CHAR:[^\]]+\]/g,"").replace(/\[TITLE:[^\]]+\]/g,"")
-    .replace(/\[GENDER:[^\]]+\]/g,"")
+    .replace(/\[ROLE:\s*\w+\]/g,"").replace(/\[MOOD:\s*\w+\]/g,"")
+    .replace(/\[MODE:\s*\w+\]/g,"").replace(/\[INNER:\s*.*?\]/g,"")
+    .replace(/\[CHAR:\s*[^\]]+\]/g,"").replace(/\[TITLE:\s*[^\]]+\]/g,"")
+    .replace(/\[GENDER:\s*[^\]]+\]/g,"")
     .replace(/^---+$/gm, "").trim();
 
   const COACHING_RE = /^(COACHING|COACH|FEEDBACK|CATATAN|KOREKSI|ANALISIS|Giliran|Giliranmu|Sekarang giliran|Kamu yang|It's your turn|Your turn|Now it's)/i;
@@ -2312,7 +2316,7 @@ export default function Profess() {
   // Each turn is rendered/spoken as its own message, in order, so the avatar
   // and chat title only switch once that turn actually starts playing.
   const splitTurns = (text) => {
-    const parts = text.split(/(?=\[ROLE:\w+\])/g).map(s => s.trim()).filter(Boolean);
+    const parts = text.split(/(?=\[ROLE:\s*\w+\])/g).map(s => s.trim()).filter(Boolean);
     return parts.length ? parts : [text];
   };
   const parseTurn = (raw) => ({
