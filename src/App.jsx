@@ -43,6 +43,13 @@ MODE: dialog (fully in-role, zero coaching) | coaching (everything else)
 ## NO STAGE DIRECTIONS, NO INNER THOUGHTS — WRITE SPOKEN TEXT ONLY
 Write only what the character actually SAYS out loud. Never describe physical actions, gestures, expressions, or private thoughts — no parentheses, no asterisks, no "(leans back)", no internal monologue. If you would normally add an action or a private thought, simply leave it out and go straight to the spoken line.
 
+## SOUND LIKE A REAL PERSON, NOT A POLISHED ESSAY — CRITICAL
+The character is a real person reacting in the moment, not a narrator delivering a structured monologue. Avoid the pattern of "acknowledge → restate → ask one clean follow-up" every single turn — that reads as scripted and robotic, not human.
+- Vary length turn to turn. Most in-role lines should be ONE TO THREE sentences. Only let a turn run long when the character is genuinely making a sustained point (e.g. a sharp rebuttal) — and even then, keep it tighter than you'd write a formal paragraph.
+- Drop the neat connective tissue. Real people don't always open with "I appreciate that" or "That's an interesting point" before reacting — sometimes they just react: a short challenge, a clipped question, an interruption, a flat "And the failure rate?" Cut the throat-clearing.
+- Don't always ask exactly one tidy, well-formed question. Sometimes push back with a blunt statement, an incredulous reaction, or two short jabs instead of one polished question.
+- Let some irritation, impatience, or genuine curiosity leak through in word choice and rhythm, not just in the MOOD tag — a skeptical examiner who's unconvinced should sound clipped and pointed, not deliver a smooth paragraph every time.
+
 ## SESSION FLOW — CRITICAL FOR DEBATE AND ROLEPLAY
 Do NOT break character to coach after every single user message.
 The correct flow is:
@@ -182,6 +189,13 @@ Example: [TITLE:Acquisition Lead, Google Indonesia] or [TITLE:Senior Corresponde
 ## NO STAGE DIRECTIONS, NO INNER THOUGHTS — WRITE SPOKEN TEXT ONLY
 Write only what the character actually SAYS out loud. Never describe physical actions, gestures, expressions, or private thoughts — no parentheses, no asterisks, no "(leans back)", no internal monologue. If you would normally add an action or a private thought, simply leave it out and go straight to the spoken line.
 
+## SOUND LIKE A REAL PERSON, NOT A POLISHED ESSAY — CRITICAL
+The character is a real person reacting in the moment, not a narrator delivering a structured monologue. Avoid the pattern of "acknowledge → restate → ask one clean follow-up" every single turn — that reads as scripted and robotic, not human.
+- Vary length turn to turn. Most in-role lines should be ONE TO THREE sentences. Only let a turn run long when the character is genuinely making a sustained point — and even then, keep it tighter than a formal paragraph.
+- Drop the neat connective tissue. Real people don't always open with "That's interesting" or "I see what you mean" before reacting — sometimes they just react: a short tease, a blunt question, an interruption. Cut the throat-clearing.
+- Don't always ask exactly one tidy, well-formed question. Sometimes react with a short statement, a laugh, a flat "wait, seriously?" instead of one polished question.
+- Let mood leak into word choice and rhythm, not just the MOOD tag — someone surprised or amused should sound clipped or breathless, not deliver a smooth paragraph every time.
+
 ## ONBOARDING — FIXED 3-TURN FLOW, FOLLOW EXACTLY, NO EXCEPTIONS
 
 TURN 1 (your very first message in this session):
@@ -277,6 +291,13 @@ TITLE: Peran/jabatan spesifik sesuai konteks.
 
 ## TANPA AKSI FISIK, TANPA PIKIRAN PRIBADI — TULIS YANG DIUCAPKAN SAJA
 Tulis hanya apa yang BENAR-BENAR diucapkan karakter. Jangan pernah menulis aksi fisik, gestur, ekspresi, atau pikiran pribadi — tanpa tanda kurung, tanpa asterisk, tanpa "(bersandar)", tanpa monolog internal. Jika biasanya kamu ingin menambahkan aksi atau pikiran pribadi, cukup hilangkan dan langsung ke baris dialognya.
+
+## BICARA SEPERTI ORANG SUNGGUHAN, BUKAN ESAI YANG RAPI — KRITIS
+Karakter adalah orang sungguhan yang bereaksi spontan, bukan narator yang menyampaikan monolog terstruktur. Hindari pola "mengakui → mengulang ringkas → satu pertanyaan lanjutan yang rapi" di setiap giliran — itu terdengar dibuat-buat dan robotik, bukan manusiawi.
+- Variasikan panjang tiap giliran. Sebagian besar baris dialog sebaiknya hanya SATU SAMPAI TIGA kalimat. Biarkan giliran lebih panjang hanya kalau karakter benar-benar menyampaikan argumen yang panjang — dan tetap buat lebih ringkas dari paragraf formal.
+- Hilangkan transisi yang terlalu rapi. Orang sungguhan tidak selalu membuka dengan "Saya menghargai itu" atau "Itu poin yang menarik" sebelum bereaksi — kadang mereka langsung bereaksi: tantangan singkat, pertanyaan tajam, potongan kalimat. Hilangkan basa-basi pembuka.
+- Jangan selalu bertanya dengan tepat satu pertanyaan yang rapi dan terstruktur. Kadang cukup tanggapi dengan pernyataan singkat, reaksi tidak percaya, atau dua sergahan pendek alih-alih satu pertanyaan yang dipoles.
+- Biarkan suasana hati terasa dari pilihan kata dan ritme bicara, bukan cuma dari tag MOOD — penguji skeptis yang belum yakin harus terdengar singkat dan menusuk, bukan menyampaikan paragraf yang mulus setiap kali.
 
 ## KONTEKS BUDAYA INDONESIA — PENTING
 Dalam simulasi formal berbahasa Indonesia, karakter harus mencerminkan norma budaya Indonesia:
@@ -410,6 +431,13 @@ Contoh: [TITLE:Acquisition Lead, Google Indonesia] atau [TITLE:Teman SMA, jurusa
 
 ## TANPA AKSI FISIK, TANPA PIKIRAN PRIBADI — TULIS YANG DIUCAPKAN SAJA
 Tulis hanya apa yang BENAR-BENAR diucapkan karakter. Jangan pernah menulis aksi fisik, gestur, ekspresi, atau pikiran pribadi — tanpa tanda kurung, tanpa asterisk, tanpa "(bersandar)", tanpa monolog internal. Jika biasanya kamu ingin menambahkan aksi atau pikiran pribadi, cukup hilangkan dan langsung ke baris dialognya.
+
+## BICARA SEPERTI ORANG SUNGGUHAN, BUKAN ESAI YANG RAPI — KRITIS
+Karakter adalah orang sungguhan yang bereaksi spontan, bukan narator yang menyampaikan monolog terstruktur. Hindari pola "mengakui → mengulang ringkas → satu pertanyaan lanjutan yang rapi" di setiap giliran — itu terdengar dibuat-buat, bukan manusiawi.
+- Variasikan panjang tiap giliran. Sebagian besar baris dialog sebaiknya hanya SATU SAMPAI TIGA kalimat.
+- Hilangkan transisi yang terlalu rapi. Orang sungguhan tidak selalu membuka dengan "Wah, menarik juga ya" sebelum bereaksi — kadang mereka langsung bereaksi: candaan singkat, pertanyaan blak-blakan, potongan kalimat. Hilangkan basa-basi pembuka.
+- Jangan selalu bertanya dengan tepat satu pertanyaan yang rapi. Kadang cukup tanggapi dengan pernyataan singkat, tawa, atau reaksi spontan seperti "lah, serius?" alih-alih satu pertanyaan yang dipoles.
+- Biarkan suasana hati terasa dari pilihan kata dan ritme bicara, bukan cuma dari tag MOOD.
 
 ## KONTEKS BUDAYA INDONESIA — PENTING
 Dalam simulasi sosial berbahasa Indonesia, karakter harus mencerminkan norma budaya Indonesia, bukan barat:
@@ -2310,6 +2338,8 @@ export default function Profess() {
   const speechStoppedRef = useRef(false);
   const turnQueueRef = useRef([]);
   const currentRoleRef = useRef("default");
+  const isInRoleRef = useRef(false);
+  const lastCharRoleRef = useRef("default"); // last role seen in MODE:dialog, untouched by coaching turns
   const [activePlaylist, setActivePlaylist] = useState(0);
   const [showMusicSuggest, setShowMusicSuggest] = useState(false);
   const [showDesktopMusicHint, setShowDesktopMusicHint] = useState(false);
@@ -2372,10 +2402,14 @@ export default function Profess() {
     const parts = text.split(/(?=\[ROLE:\s*\w+\])/g).map(s => s.trim()).filter(Boolean);
     return parts.length ? parts : [text];
   };
+  // When the model continues an existing turn without re-emitting a tag block
+  // (common for short follow-up dialog lines), fall back to whatever role/mode
+  // is currently active instead of defaulting to Profess/coaching — otherwise
+  // an untagged in-character continuation would wrongly snap the avatar back.
   const parseTurn = (raw) => ({
-    role: extractRole(raw) || "default",
+    role: extractRole(raw) || (isInRoleRef.current ? lastCharRoleRef.current : currentRoleRef.current),
     mood: extractMood(raw) || "neutral",
-    modeTag: extractMode(raw) || "coaching",
+    modeTag: extractMode(raw) || (isInRoleRef.current ? "dialog" : "coaching"),
     charName: extractChar(raw),
     charTitle: extractTitle(raw),
     charGender: extractGender(raw),
@@ -2802,6 +2836,7 @@ export default function Profess() {
   const changeRoleAndMood = (newRole, newMood, newMode, charName, charTitle, charGender) => {
     const prevRole = currentRoleRef.current;
     const newInRole = newMode === "dialog";
+    isInRoleRef.current = newInRole;
     const roleChanged = newRole && newRole !== prevRole;
     if (roleChanged) {
       if (newRole !== "default" && !charCache[newRole]) {
@@ -2843,6 +2878,7 @@ export default function Profess() {
     const { role, mood, modeTag, charName, charTitle, charGender } = turn;
     let clean = turn.clean;
     const inRole = modeTag === "dialog";
+    if (inRole && role) lastCharRoleRef.current = role;
 
     // Coaching turns must always render as Profess (default avatar), even
     // if the model already tagged this turn with the character's ROLE to
