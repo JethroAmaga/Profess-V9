@@ -38,13 +38,14 @@ export default async function handler(req, res) {
     }
   }
 
-  // deepseek-v4-pro and z-ai/glm-5.1 are both popular, heavily-trafficked
-  // NIM models and were getting 503/500/timeout constantly. Switched to
-  // older, less-popular models that tend to have spare worker capacity on
-  // NIM's free tier. NVIDIA_MODEL env override is intentionally ignored
-  // here so a stale env var can't reintroduce the old models.
-  const PRIMARY_MODEL = "meta/llama-3.1-8b-instruct";
-  const FALLBACK_MODEL = "mistralai/mistral-7b-instruct-v0.3";
+  // Older/smaller fallback models (llama-3.1-8b, mistral-7b) were stable but
+  // didn't reliably follow the [ROLE]/[MODE]/[INNER] tag protocol, so the
+  // character dialog never actually switched mode/avatar. Back to
+  // deepseek/z-ai, which follow the tag protocol much better despite being
+  // more prone to 503/timeout. NVIDIA_MODEL env override is intentionally
+  // ignored here so a stale env var can't override this choice.
+  const PRIMARY_MODEL = "deepseek-ai/deepseek-v4-pro";
+  const FALLBACK_MODEL = "z-ai/glm-5.1";
 
   async function callNvidia(model, nvMessages) {
     const controller = new AbortController();
