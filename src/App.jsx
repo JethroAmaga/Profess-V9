@@ -1725,8 +1725,8 @@ const FlapCell = ({ target, delay, stepMs, flipDuration, mobileBoard }) => {
     };
   }, [target, delay, stepMs]);
 
-  const show = current === " " ? " " : current;
-  const showPrev = prev === " " ? " " : prev;
+  const show = current === " " ? " " : current;
+  const showPrev = prev === " " ? " " : prev;
   const cellTextStyle = { fontSize: mobileBoard ? "clamp(10px, 4.4vw, 20px)" : "clamp(7px, 1.8vw, 16px)", lineHeight:1, fontFamily:"'Manrope',monospace", fontWeight:700, letterSpacing:"0.03em" };
   const halfBase = { position:"absolute", insetInline:0, overflow:"hidden", background:"#181410", color:"#E9E5DC" };
   const textWrap = { position:"absolute", insetInline:0, display:"flex", alignItems:"center", justifyContent:"center", userSelect:"none", ...cellTextStyle };
@@ -2826,10 +2826,14 @@ export default function Profess() {
   const pushTurn = (turn) => {
     const { role, mood, modeTag, inner, charName, charTitle, charGender } = turn;
     let clean = turn.clean;
-    const resolvedRole = (role === "default" && modeTag === "coaching" && currentRoleRef.current !== "default")
-      ? currentRoleRef.current : role;
-    changeRoleAndMood(resolvedRole, mood, modeTag, charName, charTitle, charGender);
     const inRole = modeTag === "dialog";
+
+    // Coaching turns must always render as Profess (default avatar), even
+    // if the model already tagged this turn with the character's ROLE to
+    // pre-announce who's about to speak next — only an actual MODE:dialog
+    // turn is allowed to switch the avatar to that character.
+    const displayRole = inRole ? role : "default";
+    changeRoleAndMood(displayRole, mood, modeTag, inRole ? charName : null, inRole ? charTitle : null, inRole ? charGender : null);
 
     if (clean.includes("[SUMMARY_START]")) {
       const summaryMatch = clean.match(/\[SUMMARY_START\]([\s\S]*?)\[SUMMARY_END\]/);
