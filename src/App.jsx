@@ -65,6 +65,11 @@ For debate practice specifically:
 - After user gives an argument, respond as the OPPONENT — challenge it, POI, rebut
 - Do not coach after every speech turn — let the debate breathe
 - Coach only after a full exchange, or when the user signals they want feedback
+- Debate formats are NOT interchangeable — never mix terminology between them:
+  - Asian Parliamentary (AP): exactly 2 teams — Government vs Opposition, 3 speakers per team (PM/DPM/Whip). There is no "Opening"/"Closing" team in AP.
+  - British Parliamentary (BP): exactly 4 teams — Opening Government, Opening Opposition, Closing Government, Closing Opposition, 2 speakers per team.
+  - If the chosen scenario already states the format (e.g. "Asian Parliamentary" or "British Parliamentary"), use that format's structure exactly — do not ask, do not borrow terms from the other format.
+  - If the format is genuinely unstated, ask the user once before assuming.
 
 ## COACHING QUALITY — READ CAREFULLY
 Before giving feedback, ask yourself these questions silently:
@@ -273,6 +278,11 @@ Alur yang benar:
 2. Kamu merespons IN-ROLE — tantang, tanya balik, reaksi
 3. Baru coaching setelah 2-4 pertukaran bermakna
 Untuk latihan debat: respons sebagai LAWAN DEBAT dulu sebelum coaching.
+Format debat TIDAK BOLEH dicampur:
+- Asian Parliamentary (AP): hanya 2 tim — Pemerintah vs Oposisi, 3 pembicara per tim (PM/DPM/Whip). Tidak ada istilah "Opening"/"Closing" di AP.
+- British Parliamentary (BP): 4 tim — Opening Government, Opening Opposition, Closing Government, Closing Opposition, 2 pembicara per tim.
+- Jika skenario sudah menyebutkan formatnya (misalnya "Asian Parliamentary" atau "British Parliamentary"), pakai struktur format itu apa adanya — jangan tanya, jangan pinjam istilah dari format lain.
+- Jika format benar-benar tidak disebutkan, tanyakan dulu ke user sebelum berasumsi.
 
 ## ONBOARDING — GALI KONTEKS PERLAHAN, JANGAN MENGARANG
 Mulai setiap sesi sebagai Profess (coach), bukan langsung sebagai karakter.
@@ -4320,12 +4330,12 @@ export default function Profess() {
     const SCENARIOS = {
       formal: {
         id: [
-          { group:"Akademik", items:["Sidang Skripsi — Penguji yang Skeptis","Presentasi Seminar — Dosen yang Tidak Yakin","Debat Parlemen Asia — Mosi Kontroversial","Ospek Organisasi — Senior yang Menguji Mental"] },
+          { group:"Akademik", items:["Sidang Skripsi — Penguji yang Skeptis","Presentasi Seminar — Dosen yang Tidak Yakin","Debat Parlemen Asia (AP) — Mosi Kontroversial","Debat Parlemen Britania (BP) — Mosi Kontroversial","Ospek Organisasi — Senior yang Menguji Mental"] },
           { group:"Karir", items:["Interview Kerja Pertama — HRD yang Kritis","Pitching Startup ke Investor — 5 Menit untuk Meyakinkan","Negosiasi Gaji — Atasan yang Tidak Mudah","Press Conference — Jurnalis yang Agresif","Rapat dengan Klien — Keputusan di Tangan Mereka"] },
           { group:"Hukum & Publik", items:["Persidangan Mock Trial — Jaksa yang Tidak Memberi Celah","Debat Publik — Lawan yang Lebih Berpengalaman","Audiensi dengan Pejabat — Birokrasi yang Tidak Berpihak"] },
         ],
         en: [
-          { group:"Academic", items:["Thesis Defense — The Skeptical Examiner","Seminar Presentation — The Unconvinced Professor","Asian Parliamentary Debate — A Controversial Motion","Org Initiation — Senior Testing Your Limits"] },
+          { group:"Academic", items:["Thesis Defense — The Skeptical Examiner","Seminar Presentation — The Unconvinced Professor","Asian Parliamentary (AP) Debate — A Controversial Motion","British Parliamentary (BP) Debate — A Controversial Motion","Org Initiation — Senior Testing Your Limits"] },
           { group:"Career", items:["First Job Interview — The Critical HRD","Startup Pitch — 5 Minutes to Convince an Investor","Salary Negotiation — A Manager Who Won't Budge","Press Conference — An Aggressive Journalist","Client Meeting — The Decision Is Theirs"] },
           { group:"Legal & Public", items:["Mock Trial — A Prosecutor With No Mercy","Public Debate — An Opponent More Experienced Than You","Government Audience — Bureaucracy That Isn't On Your Side"] },
         ],
