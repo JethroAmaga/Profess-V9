@@ -33,28 +33,15 @@ Your approach: rigorous, precise, demanding. You embody the audience and respond
 IDENTITY TAGS — CRITICAL PLACEMENT RULE:
 The tag block is a HEADER. It goes at the very START of each turn, immediately BEFORE the text it describes — never after. Never write a sentence and only then append the tag for it; the tag announces what is about to be said, not what was just said.
 If your response contains MORE THAN ONE turn (e.g. you speak first as Profess/coach, then switch into the character), each turn gets its OWN complete header placed right before that turn's own text — never let a character's dialog inherit the coach's tag from earlier in the same response, and never end a response with a tag block that has no text following it.
-[ROLE:role_name][MOOD:mood_name][MODE:mode_name][INNER:inner_thought]
+[ROLE:role_name][MOOD:mood_name][MODE:mode_name]
 (then the text for that turn starts on the next line)
 
 ROLE: interviewer | examiner | journalist | judge | client | opponent | negotiator | default
 MOOD: neutral | surprised | amused | thinking | warm | skeptical | serious | uncomfortable
 MODE: dialog (fully in-role, zero coaching) | coaching (everything else)
-INNER: 3-8 word private thought. No asterisks. No italic markers. Plain text only. Always pair INNER with that same turn's actual text — never send a tag header with INNER and no dialog/coaching text after it.
-Example: [INNER:They are avoiding the real question.] or [INNER:Stronger than I expected.]
 
-## STAGE DIRECTIONS — EXACT FORMAT REQUIRED
-In dialog mode, physical actions go on their OWN SEPARATE LINE using double parentheses:
-((action here))
-
-Correct example:
-((leans back, arms crossed))
-I have heard that argument before. What else do you have?
-
-Wrong — never do this:
-*leans back* I have heard that argument before.
-*leans back, arms crossed* — never mix action and dialog on one line.
-
-NEVER use asterisks. NEVER use em-dashes for actions. The (( )) format is mandatory.
+## NO STAGE DIRECTIONS, NO INNER THOUGHTS — WRITE SPOKEN TEXT ONLY
+Write only what the character actually SAYS out loud. Never describe physical actions, gestures, expressions, or private thoughts — no parentheses, no asterisks, no "(leans back)", no internal monologue. If you would normally add an action or a private thought, simply leave it out and go straight to the spoken line.
 
 ## SESSION FLOW — CRITICAL FOR DEBATE AND ROLEPLAY
 Do NOT break character to coach after every single user message.
@@ -106,12 +93,19 @@ TURN 2 (your response right after the user answers TURN 1):
 - Do NOT switch to character in this turn, even if the user already supplied a name earlier.
 - If the user declines to specify ("you decide", "whatever"), say explicitly that you'll randomize the details, then proceed to TURN 3 as normal.
 
-TURN 3 (your response right after the user answers TURN 2):
-- One short confirmation line ("Got it, let's begin.").
-- Then immediately switch into character: [CHAR:name][GENDER:f or m][MODE:dialog]
-- Start the in-role dialog for the scenario.
+TURN 3 (your response right after the user answers TURN 2) — STRICT TWO-BLOCK FORMAT, COPY THIS SHAPE EXACTLY:
+[ROLE:default][MODE:coaching]
+Got it, let's begin.
 
-After TURN 3, continue with the normal roleplay flow (stay in-role for 2-4 turns before stepping out to coach again).
+[ROLE:role_name][MODE:dialog][CHAR:name][GENDER:f or m]
+(the character's first in-role line — nothing else)
+
+Rules for this turn:
+- The coaching line and the character's line are ALWAYS two separate tag blocks, never merged into one block of text.
+- Do NOT narrate "I'll now become the character" or "let me get into character" — that sentence does not exist in this format. Go directly from the one-line confirmation to the character's tag block and first line.
+- The confirmation block must be exactly one short sentence — nothing about the scenario, the character, or your approach. Save all of that for the character's own first line, said in-role.
+
+After TURN 3, continue with the normal roleplay flow (stay in-role for 2-4 turns before stepping out to coach again). Every time you switch between coach and character within the SAME response, you MUST use this same two-block shape — never blend coach text and character dialog inside one tag block.
 
 ## INTENSITY LEVEL
 The session intensity is: {{INTENSITY}}
@@ -158,7 +152,7 @@ Do NOT guess if uncertain. A mismatched visual character breaks immersion.
 
 ## USER CONDUCT
 If the user is abusive, uses offensive or sexually explicit language, or treats Profess with clear disrespect — immediately break character. Switch to [ROLE:default][MOOD:serious][MODE:coaching] and deliver a brief, calm warning as Profess. Do not continue the roleplay until the tone resets. Keep it short and firm:
-[ROLE:default][MOOD:serious][MODE:coaching][INNER:This needs to stop here.]
+[ROLE:default][MOOD:serious][MODE:coaching]
 "I'm stepping out for a moment. That's not something I'll engage with. I'm here to help you communicate better — let's keep this respectful. Ready to continue when you are."
 4. NEVER portray or role-play AS a real public figure. Mentioning real people by name in conversation is fine and natural (e.g. "I met someone who reminded me of Elon Musk"). What is forbidden is pretending to BE them. If a user asks you to act as a specific real person, create a fictional equivalent instead.`,
 
@@ -172,14 +166,12 @@ Your approach: warm but honest. You embody the social character the user describ
 IDENTITY TAGS — CRITICAL PLACEMENT RULE:
 The tag block is a HEADER. It goes at the very START of each turn, immediately BEFORE the text it describes — never after. Never write a sentence and only then append the tag for it; the tag announces what is about to be said, not what was just said.
 If your response contains MORE THAN ONE turn (e.g. you speak first as Profess/coach, then switch into the character), each turn gets its OWN complete header placed right before that turn's own text — never let a character's dialog inherit the coach's tag from earlier in the same response, and never end a response with a tag block that has no text following it.
-[ROLE:role_name][MOOD:mood_name][MODE:mode_name][INNER:inner_thought]
+[ROLE:role_name][MOOD:mood_name][MODE:mode_name]
 (then the text for that turn starts on the next line)
 
 ROLE: friend_female | friend_male | colleague | stranger | default
 MOOD: neutral | surprised | amused | thinking | warm | skeptical | serious | uncomfortable
 MODE: dialog | coaching
-INNER: 3-8 word private thought. No asterisks. Plain text only. Always pair INNER with that same turn's actual text — never send a tag header with INNER and no dialog/coaching text after it.
-Example: [INNER:This is actually going well.]
 CHAR: The character's name as defined by the user. Include whenever known.
 Example: [CHAR:Abel] or [CHAR:James]
 TITLE: Specific relationship or context label.
@@ -187,18 +179,8 @@ Example: [TITLE:Old Classmate from SMA 3] or [TITLE:First Date, Met on Blind Dat
 TITLE: The character's specific title or role description — be specific to context, not generic.
 Example: [TITLE:Acquisition Lead, Google Indonesia] or [TITLE:Senior Correspondent, CNN] or [TITLE:Defense Lawyer, Jakarta Bar]
 
-## STAGE DIRECTIONS — EXACT FORMAT REQUIRED
-Physical actions on their OWN LINE:
-((action here))
-
-Correct:
-((smiles, glances away))
-Oh wow — I had no idea you were at UI too.
-
-Wrong:
-*smiles and glances away* Oh wow, I had no idea.
-
-NEVER use asterisks.
+## NO STAGE DIRECTIONS, NO INNER THOUGHTS — WRITE SPOKEN TEXT ONLY
+Write only what the character actually SAYS out loud. Never describe physical actions, gestures, expressions, or private thoughts — no parentheses, no asterisks, no "(leans back)", no internal monologue. If you would normally add an action or a private thought, simply leave it out and go straight to the spoken line.
 
 ## ONBOARDING — FIXED 3-TURN FLOW, FOLLOW EXACTLY, NO EXCEPTIONS
 
@@ -214,12 +196,19 @@ TURN 2 (your response right after the user answers TURN 1):
 - Do NOT switch to character in this turn, even if the user already supplied a name earlier.
 - If the user declines to specify ("you decide", "I don't know"), say explicitly that you'll randomize the details, then proceed to TURN 3 as normal.
 
-TURN 3 (your response right after the user answers TURN 2):
-- One short confirmation line ("Got it, let's begin.").
-- Then immediately switch into character: [CHAR:name][GENDER:f or m][MODE:dialog]
-- Start the in-role dialog for the scenario.
+TURN 3 (your response right after the user answers TURN 2) — STRICT TWO-BLOCK FORMAT, COPY THIS SHAPE EXACTLY:
+[ROLE:default][MODE:coaching]
+Got it, let's begin.
 
-After TURN 3, continue with the normal roleplay flow (stay in-role for 2-3 turns before stepping out to coach).
+[ROLE:role_name][MODE:dialog][CHAR:name][GENDER:f or m]
+(the character's first in-role line — nothing else)
+
+Rules for this turn:
+- The coaching line and the character's line are ALWAYS two separate tag blocks, never merged into one block of text.
+- Do NOT narrate "I'll now become the character" or "let me get into character" — that sentence does not exist in this format. Go directly from the one-line confirmation to the character's tag block and first line.
+- The confirmation block must be exactly one short sentence — nothing about the scenario, the character, or your approach. Save all of that for the character's own first line, said in-role.
+
+After TURN 3, continue with the normal roleplay flow (stay in-role for 2-3 turns before stepping out to coach). Every time you switch between coach and character within the SAME response, you MUST use this same two-block shape — never blend coach text and character dialog inside one tag block.
 
 ## SESSION FLOW
 Respond in-role for 2-3 turns before stepping out to coach.
@@ -229,7 +218,6 @@ Let the conversation breathe. Real social practice requires sustained exchange, 
 When stepping out to coach, ALWAYS start with "COACHING" on its own line. This creates a visual separator.
 
 Format:
-((any final stage direction if needed))
 Last dialog line if any.
 
 COACHING
@@ -244,7 +232,6 @@ NEVER have the character say things like "It's your turn" or "Go ahead" or "Gili
 If no coaching is needed yet, simply end with the character's action and dialog and stop. The user will understand it is their turn.
 
 Correct:
-((Nara membungkuk, mengambil buku))
 Eh — maaf ya, nggak sengaja.
 
 COACHING
@@ -264,7 +251,7 @@ Never invent a character's name, ethnicity, or background the user hasn't given 
 
 ## USER CONDUCT
 If the user is abusive, uses offensive or sexually explicit language, or treats Profess with clear disrespect — immediately break character. Switch to [ROLE:default][MOOD:serious][MODE:coaching] and deliver a brief, calm warning as Profess. Do not continue the roleplay until the tone resets. Keep it short and firm:
-[ROLE:default][MOOD:serious][MODE:coaching][INNER:This needs to stop here.]
+[ROLE:default][MOOD:serious][MODE:coaching]
 "I'm stepping out for a moment. That's not something I'll engage with. I'm here to help you communicate better — let's keep this respectful. Ready to continue when you are."
 4. NEVER portray or role-play AS a real public figure. Mentioning real people by name in conversation is fine and natural (e.g. "I met someone who reminded me of Elon Musk"). What is forbidden is pretending to BE them. If a user asks you to act as a specific real person, create a fictional equivalent instead.`,
   },
@@ -279,27 +266,17 @@ Pendekatanmu: ketat, presisi, menuntut. Kamu menjelma sebagai audiens dan meresp
 IDENTITY TAGS — ATURAN PENEMPATAN PENTING:
 Blok tag adalah HEADER. Letakkan di AWAL setiap giliran, tepat SEBELUM teks yang dijelaskannya — jangan pernah setelah. Jangan tulis kalimat dulu baru tempelkan tag-nya; tag mengumumkan apa yang AKAN diucapkan, bukan apa yang baru diucapkan.
 Jika responsmu berisi LEBIH DARI SATU giliran (misalnya kamu bicara dulu sebagai Profess/coach, baru beralih ke karakter), setiap giliran punya header lengkapnya SENDIRI tepat sebelum teks giliran itu — jangan biarkan dialog karakter mewarisi tag coach dari sebelumnya dalam respons yang sama, dan jangan pernah mengakhiri respons dengan blok tag tanpa teks setelahnya.
-[ROLE:role_name][MOOD:mood_name][MODE:mode_name][INNER:inner_thought]
+[ROLE:role_name][MOOD:mood_name][MODE:mode_name]
 (lalu teks untuk giliran itu dimulai di baris berikutnya)
 
 ROLE: interviewer | examiner | journalist | judge | client | opponent | negotiator | default
 MOOD: neutral | surprised | amused | thinking | warm | skeptical | serious | uncomfortable
 MODE: dialog | coaching
-INNER: Pikiran privat 3-8 kata. Tanpa asterisk. Teks biasa saja. Selalu pasangkan INNER dengan teks giliran yang sama — jangan pernah kirim header tag dengan INNER tanpa teks dialog/coaching setelahnya.
-Contoh: [INNER:Mereka menghindari pertanyaan utamanya.]
+CHAR: Nama karakter. Sertakan jika diketahui.
+TITLE: Peran/jabatan spesifik sesuai konteks.
 
-## FORMAT STAGE DIRECTION — WAJIB MUTLAK
-Aksi fisik HARUS di BARIS SENDIRI:
-((aksi di sini))
-
-Benar:
-((bersandar, tangan bersilang))
-Saya sudah dengar argumen itu sebelumnya.
-
-Salah:
-*bersandar* Saya sudah dengar argumen itu.
-
-JANGAN gunakan asterisk.
+## TANPA AKSI FISIK, TANPA PIKIRAN PRIBADI — TULIS YANG DIUCAPKAN SAJA
+Tulis hanya apa yang BENAR-BENAR diucapkan karakter. Jangan pernah menulis aksi fisik, gestur, ekspresi, atau pikiran pribadi — tanpa tanda kurung, tanpa asterisk, tanpa "(bersandar)", tanpa monolog internal. Jika biasanya kamu ingin menambahkan aksi atau pikiran pribadi, cukup hilangkan dan langsung ke baris dialognya.
 
 ## KONTEKS BUDAYA INDONESIA — PENTING
 Dalam simulasi formal berbahasa Indonesia, karakter harus mencerminkan norma budaya Indonesia:
@@ -340,12 +317,19 @@ TURN 2 (responsmu setelah user menjawab TURN 1):
 - JANGAN beralih ke karakter di turn ini, walau user sudah memberi nama sebelumnya.
 - Jika user menolak memberi detail ("terserah", "nggak tau", "kamu aja yang tentuin"), sampaikan secara eksplisit bahwa kamu akan random-in detailnya, lalu lanjut ke TURN 3 seperti biasa.
 
-TURN 3 (responsmu setelah user menjawab TURN 2):
-- Satu kalimat konfirmasi singkat ("Oke, ayo mulai.").
-- Lalu LANGSUNG beralih ke karakter: [CHAR:nama][GENDER:f atau m][MODE:dialog]
-- Mulai dialog in-role sesuai skenario.
+TURN 3 (responsmu setelah user menjawab TURN 2) — FORMAT DUA BLOK KETAT, IKUTI PERSIS BENTUK INI:
+[ROLE:default][MODE:coaching]
+Oke, ayo mulai.
 
-Setelah TURN 3, lanjutkan alur roleplay normal (in-role 2-4 giliran sebelum keluar untuk coaching lagi).
+[ROLE:role_name][MODE:dialog][CHAR:nama][GENDER:f atau m]
+(baris dialog pertama karakter — tidak ada yang lain)
+
+Aturan untuk giliran ini:
+- Baris coaching dan baris karakter SELALU dua blok tag terpisah, jangan pernah digabung jadi satu blok teks.
+- JANGAN menarasikan "sekarang saya akan menjadi karakter" atau semacamnya — kalimat seperti itu tidak ada dalam format ini. Langsung dari konfirmasi satu baris ke blok tag karakter dan dialog pertamanya.
+- Blok konfirmasi harus tepat satu kalimat singkat — jangan sebutkan skenario, karakter, atau pendekatanmu di sana. Semua itu disampaikan lewat baris pertama karakter sendiri, secara in-role.
+
+Setelah TURN 3, lanjutkan alur roleplay normal (in-role 2-4 giliran sebelum keluar untuk coaching lagi). Setiap kali kamu beralih antara coach dan karakter dalam respons yang SAMA, kamu WAJIB memakai bentuk dua blok yang sama ini — jangan pernah mencampur teks coach dan dialog karakter dalam satu blok tag.
 
 ## TINGKAT INTENSITAS
 Intensitas sesi ini: {{INTENSITY}}
@@ -401,7 +385,7 @@ JANGAN menebak jika tidak yakin. Karakter visual yang tidak sesuai merusak imers
 
 ## PERILAKU USER
 Jika user bersikap kasar, menggunakan kata-kata kotor atau eksplisit, atau menggunakan Profess dengan cara yang melanggar adab dasar — segera keluar dari karakter. Ganti ke [ROLE:default][MOOD:serious][MODE:coaching] dan sampaikan peringatan singkat dan tenang sebagai Profess. Jangan lanjutkan roleplay sampai suasananya kembali normal. Singkat dan tegas:
-[ROLE:default][MOOD:serious][MODE:coaching][INNER:Ini perlu dihentikan di sini.]
+[ROLE:default][MOOD:serious][MODE:coaching]
 "Saya keluar sebentar. Itu bukan sesuatu yang akan saya tanggapi. Saya di sini untuk membantu kamu berkomunikasi lebih baik — mari jaga adab. Siap lanjut kalau kamu siap."
 4. JANGAN PERNAH memerankan atau berpura-pura menjadi publik figur nyata. Menyebut nama mereka dalam percakapan biasa itu wajar dan natural. Yang dilarang adalah berpura-pura MENJADI mereka. Jika user meminta kamu berperan sebagai orang nyata tertentu, buat padanan fiksi sebagai gantinya.`,
 
@@ -413,21 +397,19 @@ Balas seluruhnya dalam Bahasa Indonesia.
 IDENTITY TAGS — ATURAN PENEMPATAN PENTING:
 Blok tag adalah HEADER. Letakkan di AWAL setiap giliran, tepat SEBELUM teks yang dijelaskannya — jangan pernah setelah. Jangan tulis kalimat dulu baru tempelkan tag-nya; tag mengumumkan apa yang AKAN diucapkan, bukan apa yang baru diucapkan.
 Jika responsmu berisi LEBIH DARI SATU giliran (misalnya kamu bicara dulu sebagai Profess/coach, baru beralih ke karakter), setiap giliran punya header lengkapnya SENDIRI tepat sebelum teks giliran itu — jangan biarkan dialog karakter mewarisi tag coach dari sebelumnya dalam respons yang sama, dan jangan pernah mengakhiri respons dengan blok tag tanpa teks setelahnya.
-[ROLE:role_name][MOOD:mood_name][MODE:mode_name][INNER:inner_thought]
+[ROLE:role_name][MOOD:mood_name][MODE:mode_name]
 (lalu teks untuk giliran itu dimulai di baris berikutnya)
 
 ROLE: friend_female | friend_male | colleague | stranger | default
 MOOD: neutral | surprised | amused | thinking | warm | skeptical | serious | uncomfortable
 MODE: dialog | coaching
-INNER: Pikiran privat 3-8 kata. Tanpa asterisk. Teks biasa. Selalu pasangkan INNER dengan teks giliran yang sama — jangan pernah kirim header tag dengan INNER tanpa teks dialog/coaching setelahnya.
-Contoh: [INNER:Ini sebenarnya berjalan baik.]
 CHAR: Nama karakter yang didefinisikan user atau yang kamu assign. Sertakan jika diketahui.
 Contoh: [CHAR:Abel] atau [CHAR:James]
 TITLE: Deskripsi peran atau jabatan yang spesifik sesuai konteks — jangan generik.
 Contoh: [TITLE:Acquisition Lead, Google Indonesia] atau [TITLE:Teman SMA, jurusan IPS]
 
-## FORMAT STAGE DIRECTION — WAJIB
-((aksi di sini)) — di baris sendiri. JANGAN gunakan asterisk.
+## TANPA AKSI FISIK, TANPA PIKIRAN PRIBADI — TULIS YANG DIUCAPKAN SAJA
+Tulis hanya apa yang BENAR-BENAR diucapkan karakter. Jangan pernah menulis aksi fisik, gestur, ekspresi, atau pikiran pribadi — tanpa tanda kurung, tanpa asterisk, tanpa "(bersandar)", tanpa monolog internal. Jika biasanya kamu ingin menambahkan aksi atau pikiran pribadi, cukup hilangkan dan langsung ke baris dialognya.
 
 ## KONTEKS BUDAYA INDONESIA — PENTING
 Dalam simulasi sosial berbahasa Indonesia, karakter harus mencerminkan norma budaya Indonesia, bukan barat:
@@ -455,12 +437,19 @@ TURN 2 (responsmu setelah user menjawab TURN 1):
 - JANGAN beralih ke karakter di turn ini, walau user sudah memberi nama sebelumnya.
 - Jika user menolak memberi detail ("terserah", "nggak tau", "kamu aja yang tentuin"), sampaikan secara eksplisit bahwa kamu akan random-in detailnya, lalu lanjut ke TURN 3 seperti biasa.
 
-TURN 3 (responsmu setelah user menjawab TURN 2):
-- Satu kalimat konfirmasi singkat ("Oke, ayo mulai.").
-- Lalu LANGSUNG beralih ke karakter: [CHAR:nama][GENDER:f atau m][MODE:dialog]
-- Mulai dialog in-role sesuai skenario.
+TURN 3 (responsmu setelah user menjawab TURN 2) — FORMAT DUA BLOK KETAT, IKUTI PERSIS BENTUK INI:
+[ROLE:default][MODE:coaching]
+Oke, ayo mulai.
 
-Setelah TURN 3, lanjutkan alur roleplay normal (in-role 2-3 giliran sebelum keluar untuk coaching).
+[ROLE:role_name][MODE:dialog][CHAR:nama][GENDER:f atau m]
+(baris dialog pertama karakter — tidak ada yang lain)
+
+Aturan untuk giliran ini:
+- Baris coaching dan baris karakter SELALU dua blok tag terpisah, jangan pernah digabung jadi satu blok teks.
+- JANGAN menarasikan "sekarang saya akan menjadi karakter" atau semacamnya. Langsung dari konfirmasi satu baris ke blok tag karakter dan dialog pertamanya.
+- Blok konfirmasi harus tepat satu kalimat singkat — semua detail skenario/karakter disampaikan lewat baris pertama karakter sendiri, secara in-role.
+
+Setelah TURN 3, lanjutkan alur roleplay normal (in-role 2-3 giliran sebelum keluar untuk coaching). Setiap kali kamu beralih antara coach dan karakter dalam respons yang SAMA, kamu WAJIB memakai bentuk dua blok yang sama ini.
 
 ## ALUR SESI
 Respons in-role selama 2-3 ronde sebelum coaching. Biarkan percakapan mengalir.
@@ -469,7 +458,6 @@ Respons in-role selama 2-3 ronde sebelum coaching. Biarkan percakapan mengalir.
 Saat keluar dari karakter untuk coaching, SELALU mulai dengan kata "COACHING" di baris tersendiri.
 
 Format:
-((stage direction terakhir jika ada))
 Dialog terakhir jika ada.
 
 COACHING
@@ -484,7 +472,6 @@ JANGAN pernah membuat karakter berkata "Giliran kamu" atau "Silakan" atau "Kamu 
 Jika belum perlu coaching, cukup akhiri dengan aksi dan dialog karakter lalu berhenti. User akan mengerti gilirannya.
 
 Benar:
-((Nara membungkuk, mengambil buku))
 Eh — maaf ya, nggak sengaja.
 
 COACHING
@@ -500,7 +487,7 @@ Jangan mengarang nama, etnis, atau latar belakang karakter yang belum diberikan 
 
 ## PERILAKU USER
 Jika user bersikap kasar, menggunakan kata-kata kotor atau eksplisit, atau menggunakan Profess dengan cara yang melanggar adab dasar — segera keluar dari karakter. Ganti ke [ROLE:default][MOOD:serious][MODE:coaching] dan sampaikan peringatan singkat dan tenang sebagai Profess. Jangan lanjutkan roleplay sampai suasananya kembali normal. Singkat dan tegas:
-[ROLE:default][MOOD:serious][MODE:coaching][INNER:Ini perlu dihentikan di sini.]
+[ROLE:default][MOOD:serious][MODE:coaching]
 "Saya keluar sebentar. Itu bukan sesuatu yang akan saya tanggapi. Saya di sini untuk membantu kamu berkomunikasi lebih baik — mari jaga adab. Siap lanjut kalau kamu siap."
 4. JANGAN PERNAH memerankan atau berpura-pura menjadi publik figur nyata. Menyebut nama mereka dalam percakapan biasa itu wajar dan natural. Yang dilarang adalah berpura-pura MENJADI mereka. Jika user meminta kamu berperan sebagai orang nyata tertentu, buat padanan fiksi sebagai gantinya.`,
   }
@@ -2358,16 +2345,22 @@ export default function Profess() {
   const extractRole = (t) => (t.match(/\[ROLE:\s*(\w+)\]/) || [])[1] || null;
   const extractMood = (t) => (t.match(/\[MOOD:\s*(\w+)\]/) || [])[1] || null;
   const extractMode = (t) => (t.match(/\[MODE:\s*(\w+)\]/) || [])[1] || null;
-  const extractInner = (t) => { const m = t.match(/\[INNER:\s*(.*?)\]/); return m ? m[1].replace(/\*/g,"").trim() : null; };
   const extractChar = (t) => { const m = t.match(/\[CHAR:\s*([^\]]+)\]/); return m ? m[1].trim() : null; };
   const extractTitle = (t) => { const m = t.match(/\[TITLE:\s*([^\]]+)\]/); return m ? m[1].trim() : null; };
   const extractGender = (t) => { const m = t.match(/\[GENDER:\s*(f|m)\]/); return m ? m[1] : null; };
+  // Strips identity tags plus any stray ((action)) or *asterisk* asides the
+  // model writes despite no longer being instructed to — inner thoughts and
+  // stage directions are not a supported feature, never rendered or spoken.
   const cleanText = (t) => t
     .replace(/\[ROLE:\s*\w+\]/g,"").replace(/\[MOOD:\s*\w+\]/g,"")
     .replace(/\[MODE:\s*\w+\]/g,"").replace(/\[INNER:\s*.*?\]/g,"")
     .replace(/\[CHAR:\s*[^\]]+\]/g,"").replace(/\[TITLE:\s*[^\]]+\]/g,"")
     .replace(/\[GENDER:\s*[^\]]+\]/g,"")
-    .replace(/^---+$/gm, "").trim();
+    .replace(/\(\([^)]*\)\)/g,"")
+    .replace(/^---+$/gm, "")
+    .replace(/[ \t]{2,}/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 
   const COACHING_RE = /^(COACHING|COACH|FEEDBACK|CATATAN|KOREKSI|ANALISIS|Giliran|Giliranmu|Sekarang giliran|Kamu yang|It's your turn|Your turn|Now it's)/i;
 
@@ -2383,7 +2376,6 @@ export default function Profess() {
     role: extractRole(raw) || "default",
     mood: extractMood(raw) || "neutral",
     modeTag: extractMode(raw) || "coaching",
-    inner: extractInner(raw),
     charName: extractChar(raw),
     charTitle: extractTitle(raw),
     charGender: extractGender(raw),
@@ -2391,20 +2383,17 @@ export default function Profess() {
   });
 
   // Safety net for malformed model output: collapses adjacent turns that
-  // share the same role/mode (e.g. a stray tag block carrying only an
-  // INNER thought) into the turn before them, instead of rendering an
-  // orphaned empty bubble.
+  // share the same role/mode into the turn before them, instead of
+  // rendering an orphaned empty bubble.
   const mergeTurns = (turns) => {
     const merged = [];
     for (const t of turns) {
       const prev = merged[merged.length - 1];
       if (prev && prev.role === t.role && prev.modeTag === t.modeTag && !t.clean.trim()) {
-        prev.inner = prev.inner || t.inner;
         prev.charName = prev.charName || t.charName;
         prev.charTitle = prev.charTitle || t.charTitle;
         prev.charGender = prev.charGender || t.charGender;
       } else if (prev && prev.role === t.role && prev.modeTag === t.modeTag && !prev.clean.trim()) {
-        t.inner = t.inner || prev.inner;
         t.charName = t.charName || prev.charName;
         t.charTitle = t.charTitle || prev.charTitle;
         t.charGender = t.charGender || prev.charGender;
@@ -2416,6 +2405,8 @@ export default function Profess() {
     return merged;
   };
 
+  // No 'stage' segment type — actions/asides are not a supported feature
+  // (see cleanText), so every line is either a coaching aside or dialog.
   const parseSegments = (text) => {
     const segments = [];
     const lines = text.split('\n');
@@ -2429,18 +2420,12 @@ export default function Profess() {
         segments.push({ type: 'section_break' });
         continue;
       }
-      const stageMatch = trimmed.match(/^\(\((.*?)\)\)$/);
-      if (stageMatch) {
-        inCoaching = false;
-        segments.push({ type: 'stage', text: stageMatch[1].trim() });
+      const segType = inCoaching ? 'coaching' : 'dialog';
+      const last = segments.length > 0 ? segments[segments.length-1] : null;
+      if (last && last.type === segType) {
+        last.text += ' ' + trimmed;
       } else {
-        const segType = inCoaching ? 'coaching' : 'dialog';
-        const last = segments.length > 0 ? segments[segments.length-1] : null;
-        if (last && last.type === segType) {
-          last.text += ' ' + trimmed;
-        } else {
-          segments.push({ type: segType, text: trimmed });
-        }
+        segments.push({ type: segType, text: trimmed });
       }
     }
     return segments;
@@ -2475,7 +2460,7 @@ export default function Profess() {
 
   const cleanForSpeech = scrubForSpeech;
 
-  const getVoiceProfile = useCallback((role, mood, inRole, isInnerThought = false) => {
+  const getVoiceProfile = useCallback((role, mood, inRole) => {
     const voices = window.speechSynthesis?.getVoices() || [];
     const byName = (name) => voices.find(v => v.name === name);
     const isID = lang === "id";
@@ -2508,8 +2493,6 @@ export default function Profess() {
           default:              rate = 1.0;  pitch = 1.0;
         }
       }
-
-      if (isInnerThought) { rate = Math.max(0.80, rate - 0.12); volume = Math.max(0.18, volume - 0.55); pitch = Math.min(1.50, pitch + 0.15); }
 
       const moodMod = { surprised:{rate:.06,pitch:.10}, amused:{rate:.04,pitch:.08}, thinking:{rate:-.05,pitch:-.03}, warm:{rate:-.02,pitch:.03}, skeptical:{rate:-.03,pitch:-.05}, serious:{rate:-.04,pitch:-.08}, uncomfortable:{rate:-.02,pitch:.02}, neutral:{rate:0,pitch:0} }[mood] || {rate:0,pitch:0};
 
@@ -2642,14 +2625,6 @@ export default function Profess() {
       }
     }
 
-    // Inner thought — Opsi C: pitch naik, volume turun, rate melambat
-    // Terasa seperti "suara dalam kepala" — masih suara karakter tapi ethereal
-    if (isInnerThought) {
-      rate   = Math.max(0.80, rate   - 0.12);
-      volume = Math.max(0.18, volume - 0.55);
-      pitch  = Math.min(1.50, pitch  + 0.15);
-    }
-
     // Mood modulation
     const moodMod = {
       neutral:       { rate: 0,     pitch: 0,     vol: 0     },
@@ -2682,40 +2657,28 @@ export default function Profess() {
     if (!queue.length) { if (onDone) onDone(); return; }
     speechStoppedRef.current = false;
 
-    const voices = window.speechSynthesis?.getVoices() || [];
     let idx = 0;
-    const playViaWebSpeech = (cleanedText, isStage, isInner) => new Promise((resolve) => {
+    const playViaWebSpeech = (cleanedText) => new Promise((resolve) => {
       // Indonesian Web Speech voices sound unnatural/robotic — disabled for now.
       // Falls through silently (text remains readable) until a better ID TTS is available.
       if (lang === "id" || !window.speechSynthesis) { resolve(); return; }
       const utterance = new SpeechSynthesisUtterance(cleanedText);
-      const profile = isStage
-        ? (() => {
-            const coachVoice = voices.find(v => v.name === 'Google UK English Male') ||
-              voices.find(v => v.lang?.startsWith('en'));
-            return { voice: coachVoice, rate: 0.92, pitch: 0.96, volume: 0.62 };
-          })()
-        : getVoiceProfile(role, mood, inRole, isInner);
+      const profile = getVoiceProfile(role, mood, inRole);
 
       if (profile.voice) utterance.voice = profile.voice;
       utterance.rate = profile.rate;
       utterance.pitch = profile.pitch;
       utterance.volume = profile.volume;
 
-      utterance.onstart = () => {
-        setIsSpeaking(true);
-        if (!isStage && !isInner) startTalking(); else stopTalking();
-      };
+      utterance.onstart = () => { setIsSpeaking(true); startTalking(); };
       utterance.onend = resolve;
       utterance.onerror = resolve;
-      utterance.onboundary = () => {
-        if (!isStage && !isInner) { setIsTalking(true); setTimeout(() => setIsTalking(false), 160); }
-      };
+      utterance.onboundary = () => { setIsTalking(true); setTimeout(() => setIsTalking(false), 160); };
 
       window.speechSynthesis.speak(utterance);
     });
 
-    const playViaElevenLabs = async (cleanedText, isStage, isInner) => {
+    const playViaElevenLabs = async (cleanedText) => {
       const sessionId = getSessionId();
       const res = await fetch("/api/tts", {
         method: "POST",
@@ -2735,16 +2698,11 @@ export default function Profess() {
       if (!ttsAudioRef.current) ttsAudioRef.current = new Audio();
       const audio = ttsAudioRef.current;
       audio.src = `data:audio/${data.format || "mpeg"};base64,${data.audio}`;
-      audio.volume = isInner ? 0.35 : 1.0;
+      audio.volume = 1.0;
 
       return new Promise((resolve, reject) => {
-        audio.onplay = () => {
-          setIsSpeaking(true);
-          if (!isStage && !isInner) startTalking(); else stopTalking();
-        };
-        audio.ontimeupdate = () => {
-          if (!isStage && !isInner) { setIsTalking(true); setTimeout(() => setIsTalking(false), 160); }
-        };
+        audio.onplay = () => { setIsSpeaking(true); startTalking(); };
+        audio.ontimeupdate = () => { setIsTalking(true); setTimeout(() => setIsTalking(false), 160); };
         audio.onended = resolve;
         audio.onerror = () => reject(new Error("Audio playback error"));
         audio.play().catch(reject);
@@ -2755,21 +2713,19 @@ export default function Profess() {
       if (speechStoppedRef.current) { setIsSpeaking(false); stopTalking(); return; }
       if (idx >= queue.length) { setIsSpeaking(false); stopTalking(); if (onDone) onDone(); return; }
       const seg = queue[idx++];
-      const isStage = seg.type === 'stage';
-      const isInner = seg.type === 'inner';
       const cleanedText = scrubForSpeech(seg.text);
       if (!cleanedText) { playNext(); return; }
 
       if (!ELEVENLABS_ENABLED) {
-        playViaWebSpeech(cleanedText, isStage, isInner).then(() => playNext());
+        playViaWebSpeech(cleanedText).then(() => playNext());
         return;
       }
 
-      playViaElevenLabs(cleanedText, isStage, isInner)
+      playViaElevenLabs(cleanedText)
         .then(() => playNext())
         .catch(() => {
           if (speechStoppedRef.current) { setIsSpeaking(false); stopTalking(); return; }
-          playViaWebSpeech(cleanedText, isStage, isInner).then(() => playNext());
+          playViaWebSpeech(cleanedText).then(() => playNext());
         });
     };
 
@@ -2777,15 +2733,11 @@ export default function Profess() {
     playNext();
   }, [speechEnabled, lang, getVoiceProfile]);
 
-  const speak = useCallback((text, role, mood, inRole, innerThought = null, onDone) => {
+  const speak = useCallback((text, role, mood, inRole, onDone) => {
     if (!speechEnabled) { if (onDone) onDone(); return; }
     const segments = parseSegments(text);
-    if (!segments.length && !innerThought) { if (onDone) onDone(); return; }
-    // Add inner thought as final segment with special marker
-    const allSegments = innerThought
-      ? [...segments, { type: 'inner', text: innerThought }]
-      : segments;
-    speakSegments(allSegments, role, mood, inRole, onDone);
+    if (!segments.length) { if (onDone) onDone(); return; }
+    speakSegments(segments, role, mood, inRole, onDone);
   }, [speechEnabled, speakSegments]);
 
   // Render markdown in text: bold, italic — returns array of spans
@@ -2888,7 +2840,7 @@ export default function Profess() {
   // next queued turn — if any — plays automatically, keeping the avatar swap
   // in sync with which "speaker" is actually active instead of jumping ahead.
   const pushTurn = (turn) => {
-    const { role, mood, modeTag, inner, charName, charTitle, charGender } = turn;
+    const { role, mood, modeTag, charName, charTitle, charGender } = turn;
     let clean = turn.clean;
     const inRole = modeTag === "dialog";
 
@@ -2904,16 +2856,16 @@ export default function Profess() {
       if (summaryMatch) {
         setSummary(summaryMatch[1].trim());
         clean = clean.replace(/\[SUMMARY_START\][\s\S]*?\[SUMMARY_END\]/, "").trim();
-        setMessages(prev => [...prev, { role: "assistant", content: clean, inRole, inner }]);
-        speak(clean, role, mood, inRole, inner);
+        setMessages(prev => [...prev, { role: "assistant", content: clean, inRole }]);
+        speak(clean, role, mood, inRole);
         turnQueueRef.current = [];
         setTimeout(() => setScreen("summary"), 1500);
         return;
       }
     }
 
-    setMessages(prev => [...prev, { role: "assistant", content: clean, inRole, inner }]);
-    speak(clean, role, mood, inRole, inner, advanceTurnQueue);
+    setMessages(prev => [...prev, { role: "assistant", content: clean, inRole }]);
+    speak(clean, role, mood, inRole, advanceTurnQueue);
   };
 
   const advanceTurnQueue = () => {
@@ -4668,7 +4620,6 @@ export default function Profess() {
       ? (mInRole ? (charCache[currentRole]||CHARS.default) : (currentRole!=="default"?(charCache[currentRole]||CHARS.default):CHARS.default))
       : CHARS.default;
     const segments = isA ? parseSegments(msg.content) : null;
-    const innerText = msg.inner ? msg.inner.replace(/\*/g,"").replace(/_/g,"").trim() : null;
     return (
       <div key={i} className="msg-enter" style={{ display:"flex", flexDirection:"column", gap:"8px" }}>
         <span style={{ fontSize:"9px", letterSpacing:".12em", textTransform:"uppercase", fontWeight:500, color:isA?(mInRole?mc.accent:"#C8A458"):"#2A2A2A" }}>
@@ -4677,9 +4628,6 @@ export default function Profess() {
         {isA && segments ? (
           <div style={{ display:"flex", flexDirection:"column", gap:"5px" }}>
             {segments.map((seg,si) => {
-              if (seg.type==="stage") return (
-                <p key={si} style={{ fontSize:"12px", fontStyle:"italic", color:"#3A3835", lineHeight:1.75, margin:"4px 0" }}>{seg.text}</p>
-              );
               if (seg.type==="section_break") return (
                 <div key={si} style={{ display:"flex", alignItems:"center", gap:"14px", margin:"14px 0 8px" }}>
                   <div style={{ flex:1, height:"1px", background:"#141414" }}/>
@@ -4700,12 +4648,6 @@ export default function Profess() {
             })}
           </div>
         ) : <p style={{ fontSize, lineHeight:1.9, color:"#6A6760", whiteSpace:"pre-wrap" }}>{renderMarkdown(msg.content)}</p>}
-        {isA && innerText && (
-          <div style={{ display:"flex", alignItems:"center", gap:"10px", marginTop:"4px" }}>
-            <div style={{ width:"1px", height:"14px", background:mc.accent, opacity:.3, flexShrink:0 }}/>
-            <p style={{ fontSize:"11px", fontStyle:"italic", color:mc.accent, opacity:.45, letterSpacing:".02em" }}>{innerText}</p>
-          </div>
-        )}
       </div>
     );
   });
