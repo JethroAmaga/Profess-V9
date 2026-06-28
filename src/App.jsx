@@ -2606,6 +2606,11 @@ export default function Profess() {
     };
   }, []);
 
+  // ElevenLabs account is out of credit — every call 401s and just adds a
+  // failed-request round-trip plus error-log noise before falling back to
+  // Web Speech anyway. Skip straight to Web Speech until credits are restored.
+  const ELEVENLABS_ENABLED = false;
+
   const speakSegments = useCallback((segments, role, mood, inRole, onDone) => {
     if (!speechEnabled) { if (onDone) onDone(); return; }
 
@@ -2690,6 +2695,11 @@ export default function Profess() {
       const isInner = seg.type === 'inner';
       const cleanedText = scrubForSpeech(seg.text);
       if (!cleanedText) { playNext(); return; }
+
+      if (!ELEVENLABS_ENABLED) {
+        playViaWebSpeech(cleanedText, isStage, isInner).then(() => playNext());
+        return;
+      }
 
       playViaElevenLabs(cleanedText, isStage, isInner)
         .then(() => playNext())
