@@ -16,9 +16,9 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: { message: "Too many requests, please slow down" } });
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.NVIDIA_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: { message: "ANTHROPIC_API_KEY not configured" } });
+    return res.status(500).json({ error: { message: "NVIDIA_API_KEY not configured" } });
   }
 
   const { system, messages } = req.body || {};
@@ -38,25 +38,25 @@ export default async function handler(req, res) {
     }
   }
 
-  const MODEL = "claude-sonnet-4-6";
+  const MODEL = "meta/llama-3.1-8b-instruct";
+
+  const nimMessages = system ? [{ role: "system", content: system }, ...messages] : messages;
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 55000);
 
   try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    const response = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
       method: "POST",
       signal: controller.signal,
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
         model: MODEL,
         max_tokens: 1000,
-        ...(system ? { system } : {}),
-        messages,
+        messages: nimMessages,
       }),
     });
 
@@ -65,17 +65,17 @@ export default async function handler(req, res) {
     try {
       data = JSON.parse(raw);
     } catch {
-      console.error(`Non-JSON response from Anthropic (status ${response.status})`);
+      console.error(`Non-JSON response from NVIDIA NIM (status ${response.status})`);
       return res.status(502).json({ error: { message: "AI service unavailable" } });
     }
 
     if (!response.ok) {
-      console.error("Anthropic API error:", response.status, data);
+      console.error("NVIDIA NIM API error:", response.status, data);
       const status = [429, 500, 503, 529].includes(response.status) ? 503 : response.status;
       return res.status(status).json({ error: { message: "AI service unavailable" } });
     }
 
-    const text = data.content?.[0]?.text || "";
+    const text = data.choices?.[0]?.message?.content || "";
 
     // Output guardrail: even though the system prompt instructs the model not
     // to produce this content, it can be jailbroken — this deterministic
@@ -88,7 +88,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ content: [{ type: "text", text }] });
   } catch (err) {
     if (err.name === "AbortError") {
-      console.error("Anthropic request timed out after 55s");
+      console.error("NVIDIA NIM request timed out after 55s");
       return res.status(504).json({ error: { message: "AI service unavailable" } });
     }
     console.error("chat handler error:", err);
