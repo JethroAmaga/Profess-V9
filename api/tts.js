@@ -1,6 +1,6 @@
 // Proxies to ElevenLabs Text-to-Speech REST API.
 // Docs: https://elevenlabs.io/docs/api-reference/text-to-speech
-import { isRateLimited, isForeignOrigin } from "./_security.js";
+import { isRateLimited, isForeignOrigin, containsBannedContent } from "./_security.js";
 
 const MAX_TEXT_CHARS = 1000;
 
@@ -28,6 +28,9 @@ export default async function handler(req, res) {
     }
     if (text.length > MAX_TEXT_CHARS) {
       return res.status(400).json({ error: { message: "text is too long" } });
+    }
+    if (containsBannedContent(text)) {
+      return res.status(400).json({ error: { message: "text violates content policy" } });
     }
 
     // Default voice: "Rachel" (well-known stable public voice id). Override via env if desired.

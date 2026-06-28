@@ -1,26 +1,8 @@
-import { isRateLimited, isForeignOrigin } from "./_security.js";
+import { isRateLimited, isForeignOrigin, containsBannedContent } from "./_security.js";
 
 const MAX_MESSAGES = 50;
 const MAX_CONTENT_CHARS = 6000;
 const MAX_SYSTEM_CHARS = 16000;
-
-// Deterministic backstop against severe hate speech/slurs, independent of
-// the LLM's own "USER CONDUCT" system-prompt instructions. Deliberately
-// narrow (only egregious terms) so it doesn't break legitimate confrontational
-// or debate-simulation roleplay, which this app's characters rely on.
-const BANNED_PATTERNS = [
-  /\bn[i1]gg[ea3]r/i,
-  /\bf[a4]gg[o0]t/i,
-  /\bk[i1]ke\b/i,
-  /\bch[i1]nk\b/i,
-  /\bsp[i1]c\b/i,
-  /\bt[e3]rr[o0]r[i1]st\s+(attack|bomb)/i,
-  /\bhow\s+to\s+(make|build)\s+a\s+bomb/i,
-];
-
-function containsBannedContent(text) {
-  return BANNED_PATTERNS.some((re) => re.test(text));
-}
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
