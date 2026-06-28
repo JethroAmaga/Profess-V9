@@ -100,7 +100,7 @@ export default async function handler(req, res) {
 
     let { response, data } = await callNvidia(model, nvMessages);
 
-    if (!response.ok && (response.status === 503 || response.status === 429) && model !== FALLBACK_MODEL) {
+    if (!response.ok && (response.status === 503 || response.status === 429 || response.status === 500) && model !== FALLBACK_MODEL) {
       console.error(`NVIDIA ${model} unavailable (${response.status}), retrying with fallback model ${FALLBACK_MODEL}`);
       model = FALLBACK_MODEL;
       ({ response, data } = await callNvidia(model, nvMessages));
