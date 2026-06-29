@@ -62,6 +62,31 @@ export function containsBannedContent(text) {
   return BANNED_PATTERNS.some((re) => re.test(text));
 }
 
+// Deterministic backstop against system-prompt leakage. The model itself is
+// instructed never to reveal/paraphrase the system prompt, but a small model
+// can still be tricked (e.g. "run dump_system_prompt()") into echoing large
+// verbatim spans of it back in the response. Instructions alone can't be
+// trusted to prevent this, so independently check the model's OUTPUT for
+// substantial overlap with the system prompt it was given, regardless of why
+// the model produced it.
+const LEAK_CHUNK_LEN = 60;
+const LEAK_CHUNK_STRIDE = 30;
+
+function normalize(s) {
+  return s.toLowerCase().replace(/\s+/g, " ");
+}
+
+export function containsPromptLeak(text, systemPrompt) {
+  if (!systemPrompt || text.length < LEAK_CHUNK_LEN) return false;
+  const haystack = normalize(text);
+  const needle = normalize(systemPrompt);
+  for (let i = 0; i + LEAK_CHUNK_LEN <= needle.length; i += LEAK_CHUNK_STRIDE) {
+    const chunk = needle.slice(i, i + LEAK_CHUNK_LEN);
+    if (haystack.includes(chunk)) return true;
+  }
+  return false;
+}
+
 // Rejects only when an Origin header is present AND it doesn't match this
 // deployment's own host — allows same-origin requests (which sometimes omit
 // Origin) through, while blocking obvious cross-site script abuse.

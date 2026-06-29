@@ -1,4 +1,4 @@
-import { isRateLimited, isForeignOrigin, containsBannedContent } from "./_security.js";
+import { isRateLimited, isForeignOrigin, containsBannedContent, containsPromptLeak } from "./_security.js";
 
 const MAX_MESSAGES = 50;
 const MAX_CONTENT_CHARS = 6000;
@@ -82,6 +82,15 @@ export default async function handler(req, res) {
     // check blocks the response from ever reaching the client/TTS regardless.
     if (containsBannedContent(text)) {
       console.error("Blocked banned content in model output");
+      return res.status(502).json({ error: { message: "Response blocked by content policy" } });
+    }
+
+    // Same idea for system-prompt leakage: a weak model can be tricked into
+    // echoing large verbatim spans of its own system prompt (e.g. via fake
+    // "dump_system_prompt()" commands) regardless of what it's told not to
+    // do — catch that independently of the model's compliance.
+    if (containsPromptLeak(text, system)) {
+      console.error("Blocked system prompt leak in model output");
       return res.status(502).json({ error: { message: "Response blocked by content policy" } });
     }
 
