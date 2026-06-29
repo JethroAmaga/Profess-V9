@@ -2698,7 +2698,33 @@ export default function Profess() {
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 
+  // Weak-model POV slip: narration about the character is written in third
+  // person ("Claire looks up...") but the user should always be "you" in
+  // that narration — the model sometimes slips into "...as she sees ME
+  // approaching", confusingly narrating from the user's own first-person
+  // viewpoint instead. Fix it by swapping bare me/my/mine -> you/your/yours
+  // everywhere OUTSIDE quoted dialogue, where first person never legitimately
+  // refers to the user (only the character's own quoted speech may say "I").
+  const fixNarrationPOV = (text) => {
+    const parts = text.split(/("(?:[^"\\]|\\.)*"|“[^”]*”)/g);
+    return parts.map((part, i) => {
+      if (i % 2 === 1) return part; // quoted dialogue — leave first person alone
+      return part
+        .replace(/\bme\b/g, "you")
+        .replace(/\bMe\b/g, "You")
+        .replace(/\bmy\b/g, "your")
+        .replace(/\bMy\b/g, "Your")
+        .replace(/\bmine\b/g, "yours")
+        .replace(/\bMine\b/g, "Yours");
+    }).join("");
+  };
+
   const COACHING_RE = /^(COACHING|COACH|FEEDBACK|CATATAN|KOREKSI|ANALISIS|Giliran|Giliranmu|Sekarang giliran|Kamu yang|It's your turn|Your turn|Now it's)/i;
+  // Evaluative meta-commentary language the model uses when giving feedback
+  // on the user's reply — a character would never talk like this about
+  // themselves, so seeing this language is a strong signal that a turn is
+  // coaching feedback even if the model forgot to re-emit [MODE:coaching].
+  const FEEDBACK_LANGUAGE_RE = /\b(you did (a|an)|you could (consider|try|ask)|you might (want|consider)|good job|great job|well done|next,? you|try to|consider (asking|saying|adding)|shows? that you|helps? to (break|create|build)|acknowledg(e|ing)|self-deprecating)\b/i;
 
   // Splits one raw API response into separate turns wherever a new [ROLE:...]
   // tag block starts — e.g. Profess clarifying, then the character speaking.
@@ -2737,14 +2763,38 @@ export default function Profess() {
       ? (lastCharRoleRef.current !== "default" && lastCharRoleRef.current ? lastCharRoleRef.current
         : "char_" + nameIntroMatch[1].toLowerCase().replace(/[^a-z]+/g, "_"))
       : null;
+    let role = taggedRole || introRoleKey || (isInRoleRef.current ? lastCharRoleRef.current : currentRoleRef.current);
+    let modeTag = taggedMode || (introOnly ? "dialog" : (isInRoleRef.current ? "dialog" : "coaching"));
+    let charName = taggedChar || (introOnly ? nameIntroMatch[1] : null);
+    const clean = fixNarrationPOV(cleanText(raw));
+
+    // Safety net: if the model drops back to giving feedback on the user's
+    // reply without re-emitting [MODE:coaching], the untagged fallback above
+    // wrongly keeps the turn under the character's own avatar/name (e.g. a
+    // "CLAIRE" bubble that's actually meta-commentary like "You did a great
+    // job of acknowledging your nervousness..."). A character would never
+    // refer to themselves by name in third person, and wouldn't use this
+    // evaluative coaching language about the user's message — catch either
+    // signal and snap the turn back to Profess/coaching.
+    if (!taggedMode && modeTag === "dialog") {
+      const refName = canonCharNameRef.current || charName;
+      const escaped = refName ? refName.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&") : "";
+      const selfThirdPerson = escaped && new RegExp(`\\b${escaped}\\b`, "i").test(clean);
+      if (selfThirdPerson || FEEDBACK_LANGUAGE_RE.test(clean)) {
+        role = "default";
+        modeTag = "coaching";
+        charName = null;
+      }
+    }
+
     return {
-      role: taggedRole || introRoleKey || (isInRoleRef.current ? lastCharRoleRef.current : currentRoleRef.current),
+      role,
       mood: extractMood(raw) || "neutral",
-      modeTag: taggedMode || (introOnly ? "dialog" : (isInRoleRef.current ? "dialog" : "coaching")),
-      charName: taggedChar || (introOnly ? nameIntroMatch[1] : null),
+      modeTag,
+      charName,
       charTitle: extractTitle(raw),
       charGender: extractGender(raw),
-      clean: cleanText(raw),
+      clean,
     };
   };
 
@@ -2801,6 +2851,7 @@ export default function Profess() {
     const segments = [];
     const lines = text.split('\n');
     let inCoaching = false;
+    let dialogStarted = false;
     for (const line of lines) {
       const trimmed = line.trim();
       if (!trimmed) continue;
@@ -2817,16 +2868,18 @@ export default function Profess() {
       }
       // Safety net for the model forgetting to wrap a narration beat in
       // asterisks (e.g. "Claire looks up from her book..." sitting as its
-      // own line right before her quoted line). A dialog line is supposed
-      // to be spoken aloud, but third-person narration has no quote marks
-      // at all — treat any quote-free line in a dialog turn as an unwrapped
-      // stage direction so it gets the same muted styling and TTS skip as
-      // a properly asterisk-wrapped beat, instead of being read aloud.
-      if (!inCoaching && !/["“”]/.test(trimmed)) {
+      // own line right before her quoted line). Only applies to a LEADING
+      // quote-free line before any dialogue has started in this turn — once
+      // dialogue is underway, a quote-free line is almost always just a
+      // continuation of the same quoted speech wrapping onto a new line
+      // (no quote mark on every line), not a new narration beat, so it must
+      // stay a normal dialog line instead of being demoted to italic/small.
+      if (!inCoaching && !dialogStarted && !/["“”]/.test(trimmed)) {
         segments.push({ type: 'stage', text: trimmed });
         continue;
       }
       const segType = inCoaching ? 'coaching' : 'dialog';
+      if (segType === 'dialog') dialogStarted = true;
       const last = segments.length > 0 ? segments[segments.length-1] : null;
       if (last && last.type === segType) {
         last.text += ' ' + trimmed;
@@ -3223,12 +3276,22 @@ export default function Profess() {
         if (charName) generated.name = charName;
         setCharCache(prev => ({ ...prev, [newRole]: generated }));
       } else if ((charName || charTitle || charGender) && charCache[newRole]) {
-        setCharCache(prev => ({ ...prev, [newRole]: {
-          ...prev[newRole],
-          ...(charName ? { name: charName } : {}),
-          ...(charTitle ? { title: charTitle } : {}),
-          ...(charGender ? { gender: charGender, hairLong: charGender === "f" } : {}),
-        }}));
+        // If the gender we now know about disagrees with whatever's cached,
+        // the cached entry's hairStyle/beard/skin were built for the WRONG
+        // gender — patching just gender+hairLong would leave those visuals
+        // contradicting it. Regenerate the whole appearance instead.
+        if (charGender && charCache[newRole].gender !== charGender) {
+          const generated = generateChar(newRole, charGender);
+          generated.title = charTitle || charCache[newRole].title || ROLE_TITLES[newRole] || newRole;
+          generated.name = charName || charCache[newRole].name;
+          setCharCache(prev => ({ ...prev, [newRole]: generated }));
+        } else {
+          setCharCache(prev => ({ ...prev, [newRole]: {
+            ...prev[newRole],
+            ...(charName ? { name: charName } : {}),
+            ...(charTitle ? { title: charTitle } : {}),
+          }}));
+        }
       }
       currentRoleRef.current = newRole;
       setIsTransitioning(true);
@@ -3237,12 +3300,19 @@ export default function Profess() {
       if (newMood) setCurrentMood(newMood);
       setIsInRole(newInRole);
       if ((charName || charTitle || charGender) && prevRole !== "default") {
-        setCharCache(prev => ({ ...prev, [prevRole]: {
-          ...(prev[prevRole]||{}),
-          ...(charName ? { name: charName } : {}),
-          ...(charTitle ? { title: charTitle } : {}),
-          ...(charGender ? { gender: charGender, hairLong: charGender === "f" } : {}),
-        }}));
+        const cached = charCache[prevRole];
+        if (charGender && cached && cached.gender !== charGender) {
+          const generated = generateChar(prevRole, charGender);
+          generated.title = charTitle || cached.title || ROLE_TITLES[prevRole] || prevRole;
+          generated.name = charName || cached.name;
+          setCharCache(prev => ({ ...prev, [prevRole]: generated }));
+        } else {
+          setCharCache(prev => ({ ...prev, [prevRole]: {
+            ...(prev[prevRole]||{}),
+            ...(charName ? { name: charName } : {}),
+            ...(charTitle ? { title: charTitle } : {}),
+          }}));
+        }
       }
     }
   };
@@ -3369,6 +3439,14 @@ export default function Profess() {
     setSessionMode(mode); setScreen("session"); setLoading(true); setError(null);
     canonCharNameRef.current = null;
     canonCharGenderRef.current = null;
+    // A role key like "crush" is reused across every session of that
+    // scenario type — without clearing charCache here, a stale entry from a
+    // PREVIOUS session (e.g. generated male before the gender lock was even
+    // set) survives into this new one. changeRoleAndMood then only patches
+    // gender/hairLong onto it instead of regenerating, leaving the old
+    // beard/hairStyle/skin baked in — a contradictory, still male-looking
+    // avatar even though gender now correctly says "f". Reset per session.
+    setCharCache({});
     try {
       const baseMsg = lang === "id" ? "Halo, saya ingin memulai sesi." : "Hello, I'd like to start a session.";
       const initMsg = selectedScenario
