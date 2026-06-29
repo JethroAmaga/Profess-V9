@@ -3281,15 +3281,27 @@ export default function Profess() {
       // tag / self-introduced "Name: "quote"" line (both surfaced via
       // charName), or — the gap this closes — a bare name-only header line
       // ("Luna" alone, then third-person narration) that has no colon/quote
-      // and so never trips the other two checks at all. Checked with the
-      // multiline flag and not anchored to the very start of the chunk,
-      // since an untagged intro like "Got it, let's begin." often sits on
-      // the same unsplit chunk ahead of the name line.
+      // and so never trips the other two checks at all. Each line is
+      // stripped of markdown emphasis (**Emma**, __Emma__) before the
+      // name-only check, since the model sometimes bolds the header instead
+      // of leaving it plain — a leading "*" would otherwise break a regex
+      // anchored on a capital letter. Checked across every line in the
+      // chunk (not just the first), since an untagged intro like "Got it,
+      // let's begin." often sits ahead of the name line in the same chunk,
+      // and the name line must have further content after it (an actual
+      // header, not the chunk's last line) to count.
       const firstRaw = (rawTurns[0] || "").trim();
+      const NAME_ONLY_RE = /^[A-Z][A-Za-z.'-]+(?: [A-Z][A-Za-z.'-]+){0,2}$/;
+      const rawLines = firstRaw.split("\n");
+      const hasBareNameHeader = rawLines.some((line, i) => {
+        if (i === rawLines.length - 1) return false;
+        const stripped = line.trim().replace(/^[*_#\s]+|[*_:\s]+$/g, "");
+        return stripped && NAME_ONLY_RE.test(stripped);
+      });
       const looksOffScript = !!turns[0] && (
         turns[0].modeTag === "dialog" ||
         !!turns[0].charName ||
-        /^[A-Z][A-Za-z.'-]+(?: [A-Z][A-Za-z.'-]+){0,2}\s*\n/m.test(firstRaw)
+        hasBareNameHeader
       );
       if (looksOffScript) {
         const askWho = lang === "id"
