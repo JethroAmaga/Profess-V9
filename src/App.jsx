@@ -3265,7 +3265,8 @@ export default function Profess() {
         : baseMsg;
       const init = [{ role:"user", content:initMsg }];
       const text = await callAPI(init, mode, lang, intensity);
-      const turns = mergeTurns(splitTurns(text).map(parseTurn));
+      const rawTurns = splitTurns(text);
+      const turns = mergeTurns(rawTurns.map(parseTurn));
       setMessages([{ role:"user", content:initMsg }]);
       // Deterministic onboarding guard: the weak model sometimes ignores the
       // ONBOARDING instructions and jumps straight to inventing a character
@@ -3275,7 +3276,19 @@ export default function Profess() {
       // first turn is already in-role, discard it entirely (don't let an
       // invented name/character enter the conversation) and ask the real
       // TURN 1 question ourselves.
-      if (turns[0] && turns[0].modeTag === "dialog") {
+      // Three independent signals, since the model doesn't always tag its
+      // own output consistently: an explicit [MODE:dialog] tag, a [CHAR:...]
+      // tag / self-introduced "Name: "quote"" line (both surfaced via
+      // charName), or — the gap this closes — a bare name-only header line
+      // ("Luna" alone, then third-person narration) that has no colon/quote
+      // and so never trips the other two checks at all.
+      const firstRaw = (rawTurns[0] || "").trim();
+      const looksOffScript = !!turns[0] && (
+        turns[0].modeTag === "dialog" ||
+        !!turns[0].charName ||
+        /^[A-Z][A-Za-z.'-]+(?: [A-Z][A-Za-z.'-]+){0,2}\s*\n/.test(firstRaw)
+      );
+      if (looksOffScript) {
         const askWho = lang === "id"
           ? "Cerita dong situasinya — ini sama siapa, dan gimana ceritanya?"
           : "Tell me about the situation — who is this with, and what's going on?";
