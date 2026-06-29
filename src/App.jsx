@@ -176,7 +176,7 @@ If your response contains MORE THAN ONE turn (e.g. you speak first as Profess/co
 [ROLE:role_name][MOOD:mood_name][MODE:mode_name]
 (then the text for that turn starts on the next line)
 
-ROLE: friend_female | friend_male | colleague | stranger | default
+ROLE: friend_female | friend_male | best_friend | colleague | stranger | new_acquaintance | crush | romantic_interest | date | blind_date | ex_partner | sibling | parent | grandparent | manager | subordinate | mentee | neighbor | classmate | alumni | host | guest | fellow_passenger | customer_service | default
 MOOD: neutral | surprised | amused | thinking | warm | skeptical | serious | uncomfortable
 MODE: dialog | coaching
 CHAR: The character's name as defined by the user. Include whenever known.
@@ -185,6 +185,9 @@ TITLE: Specific relationship or context label.
 Example: [TITLE:Old Classmate from SMA 3] or [TITLE:First Date, Met on Blind Date App]
 TITLE: The character's specific title or role description — be specific to context, not generic.
 Example: [TITLE:Acquisition Lead, Google Indonesia] or [TITLE:Senior Correspondent, CNN] or [TITLE:Defense Lawyer, Jakarta Bar]
+
+## YOU BECOME THE EXACT PERSON DESCRIBED — NEVER A THIRD PARTY
+When you switch into MODE:dialog, you ARE the specific person the user is interacting with in the scenario (the crush, the date, the colleague, whoever it is) — speaking directly TO the user, in the first person, in that scene. You are never a separate friend, bystander, or advisor who comments ABOUT that person from the outside. If the user describes a romantic interest named "Emma", the character you become IS Emma, with [CHAR:Emma] and a ROLE that matches that relationship (crush, romantic_interest, date, or blind_date — never friend_female/colleague/stranger out of laziness, and never an invented third name). Pick the ROLE value that most precisely matches the relationship the user described in TURN 1/TURN 2, not whichever is easiest to default to.
 
 ## NO STAGE DIRECTIONS, NO INNER THOUGHTS — WRITE SPOKEN TEXT ONLY
 Write only what the character actually SAYS out loud. Never describe physical actions, gestures, expressions, or private thoughts — no parentheses, no asterisks, no "(leans back)", no internal monologue. If you would normally add an action or a private thought, simply leave it out and go straight to the spoken line.
@@ -421,13 +424,16 @@ Jika responsmu berisi LEBIH DARI SATU giliran (misalnya kamu bicara dulu sebagai
 [ROLE:role_name][MOOD:mood_name][MODE:mode_name]
 (lalu teks untuk giliran itu dimulai di baris berikutnya)
 
-ROLE: friend_female | friend_male | colleague | stranger | default
+ROLE: friend_female | friend_male | best_friend | colleague | stranger | new_acquaintance | crush | romantic_interest | date | blind_date | ex_partner | sibling | parent | grandparent | manager | subordinate | mentee | neighbor | classmate | alumni | host | guest | fellow_passenger | customer_service | default
 MOOD: neutral | surprised | amused | thinking | warm | skeptical | serious | uncomfortable
 MODE: dialog | coaching
 CHAR: Nama karakter yang didefinisikan user atau yang kamu assign. Sertakan jika diketahui.
 Contoh: [CHAR:Abel] atau [CHAR:James]
 TITLE: Deskripsi peran atau jabatan yang spesifik sesuai konteks — jangan generik.
 Contoh: [TITLE:Acquisition Lead, Google Indonesia] atau [TITLE:Teman SMA, jurusan IPS]
+
+## KAMU MENJADI ORANG YANG DIMAKSUD PERSIS — JANGAN PERNAH JADI PIHAK KETIGA
+Saat beralih ke MODE:dialog, kamu ADALAH orang spesifik yang sedang berinteraksi dengan user dalam skenario itu (gebetan, teman kencan, kolega, siapapun itu) — berbicara LANGSUNG ke user, sebagai orang pertama, di dalam skenario itu. Kamu tidak pernah menjadi teman lain, orang ketiga, atau penasihat yang mengomentari orang itu dari luar. Jika user menyebutkan nama gebetannya "Emma", karakter yang kamu jadi ADALAH Emma, dengan [CHAR:Emma] dan ROLE yang sesuai hubungan itu (crush, romantic_interest, date, atau blind_date — jangan friend_female/colleague/stranger karena malas, dan jangan mengarang nama pihak ketiga). Pilih nilai ROLE yang paling presisi sesuai hubungan yang dijelaskan user di TURN 1/TURN 2, bukan yang paling mudah.
 
 ## TANPA AKSI FISIK, TANPA PIKIRAN PRIBADI — TULIS YANG DIUCAPKAN SAJA
 Tulis hanya apa yang BENAR-BENAR diucapkan karakter. Jangan pernah menulis aksi fisik, gestur, ekspresi, atau pikiran pribadi — tanpa tanda kurung, tanpa asterisk, tanpa "(bersandar)", tanpa monolog internal. Jika biasanya kamu ingin menambahkan aksi atau pikiran pribadi, cukup hilangkan dan langsung ke baris dialognya.
@@ -2398,23 +2404,49 @@ export default function Profess() {
   // tag block starts — e.g. Profess clarifying, then the character speaking.
   // Each turn is rendered/spoken as its own message, in order, so the avatar
   // and chat title only switch once that turn actually starts playing.
+  // Safety net for weak-model failures where the character starts speaking
+  // ("Dr. Kim: "Thank you for...") without ever emitting a fresh [ROLE:]
+  // tag — split there too so the line isn't stuck under the earlier
+  // coaching tag (which would leave the avatar/title stuck on "Profess").
+  const NAME_INTRO_RE = /\n(?=[A-Z][A-Za-z.'-]+(?: [A-Z][A-Za-z.'-]+){0,3}:\s*["“])/g;
+
   const splitTurns = (text) => {
-    const parts = text.split(/(?=\[ROLE:\s*\w+\])/g).map(s => s.trim()).filter(Boolean);
+    const byRole = text.split(/(?=\[ROLE:\s*\w+\])/g);
+    const parts = byRole
+      .flatMap(chunk => /\[ROLE:\s*\w+\]/.test(chunk) ? [chunk] : chunk.split(NAME_INTRO_RE))
+      .map(s => s.trim())
+      .filter(Boolean);
     return parts.length ? parts : [text];
   };
   // When the model continues an existing turn without re-emitting a tag block
   // (common for short follow-up dialog lines), fall back to whatever role/mode
   // is currently active instead of defaulting to Profess/coaching — otherwise
   // an untagged in-character continuation would wrongly snap the avatar back.
-  const parseTurn = (raw) => ({
-    role: extractRole(raw) || (isInRoleRef.current ? lastCharRoleRef.current : currentRoleRef.current),
-    mood: extractMood(raw) || "neutral",
-    modeTag: extractMode(raw) || (isInRoleRef.current ? "dialog" : "coaching"),
-    charName: extractChar(raw),
-    charTitle: extractTitle(raw),
-    charGender: extractGender(raw),
-    clean: cleanText(raw),
-  });
+  // Catches the case where this chunk starts with an untagged self-introduced
+  // "Name: "quote"" line (split off by the NAME_INTRO_RE safety net above) —
+  // without this, an untagged chunk would silently fall back to whatever
+  // role/mode is currently active (usually default/coaching), leaving the
+  // character's own name stuck as literal text under the "Profess" label.
+  const parseTurn = (raw) => {
+    const taggedRole = extractRole(raw);
+    const taggedMode = extractMode(raw);
+    const taggedChar = extractChar(raw);
+    const nameIntroMatch = raw.match(/^([A-Z][A-Za-z.'-]+(?: [A-Z][A-Za-z.'-]+){0,3}):\s*["“]/);
+    const introOnly = !taggedRole && !taggedMode && !taggedChar && nameIntroMatch;
+    const introRoleKey = introOnly
+      ? (lastCharRoleRef.current !== "default" && lastCharRoleRef.current ? lastCharRoleRef.current
+        : "char_" + nameIntroMatch[1].toLowerCase().replace(/[^a-z]+/g, "_"))
+      : null;
+    return {
+      role: taggedRole || introRoleKey || (isInRoleRef.current ? lastCharRoleRef.current : currentRoleRef.current),
+      mood: extractMood(raw) || "neutral",
+      modeTag: taggedMode || (introOnly ? "dialog" : (isInRoleRef.current ? "dialog" : "coaching")),
+      charName: taggedChar || (introOnly ? nameIntroMatch[1] : null),
+      charTitle: extractTitle(raw),
+      charGender: extractGender(raw),
+      clean: cleanText(raw),
+    };
+  };
 
   // Safety net for malformed model output: collapses adjacent turns that
   // share the same role/mode into the turn before them, instead of
@@ -2887,12 +2919,21 @@ export default function Profess() {
     const displayRole = inRole ? role : "default";
     changeRoleAndMood(displayRole, mood, modeTag, inRole ? charName : null, inRole ? charTitle : null, inRole ? charGender : null);
 
+    // Snapshot which character this specific message belongs to at the
+    // moment it's pushed, so the bubble label can't drift if currentRole/
+    // charCache changes later (e.g. queued turns advancing, transition delay).
+    const charSnapshot = inRole ? {
+      name: charName || (charCache[displayRole] && charCache[displayRole].name) || displayRole,
+      title: charTitle || (charCache[displayRole] && charCache[displayRole].title) || ROLE_TITLES[displayRole] || displayRole,
+      accent: (charCache[displayRole] && charCache[displayRole].accent) || CHARS.default.accent,
+    } : null;
+
     if (clean.includes("[SUMMARY_START]")) {
       const summaryMatch = clean.match(/\[SUMMARY_START\]([\s\S]*?)\[SUMMARY_END\]/);
       if (summaryMatch) {
         setSummary(summaryMatch[1].trim());
         clean = clean.replace(/\[SUMMARY_START\][\s\S]*?\[SUMMARY_END\]/, "").trim();
-        setMessages(prev => [...prev, { role: "assistant", content: clean, inRole }]);
+        setMessages(prev => [...prev, { role: "assistant", content: clean, inRole, charSnapshot }]);
         speak(clean, role, mood, inRole);
         turnQueueRef.current = [];
         setTimeout(() => setScreen("summary"), 1500);
@@ -2900,7 +2941,7 @@ export default function Profess() {
       }
     }
 
-    setMessages(prev => [...prev, { role: "assistant", content: clean, inRole }]);
+    setMessages(prev => [...prev, { role: "assistant", content: clean, inRole, charSnapshot }]);
     speak(clean, role, mood, inRole, advanceTurnQueue);
   };
 
@@ -4653,7 +4694,7 @@ export default function Profess() {
     const isA = msg.role==="assistant";
     const mInRole = isA && msg.inRole;
     const mc = isA
-      ? (mInRole ? (charCache[currentRole]||CHARS.default) : (currentRole!=="default"?(charCache[currentRole]||CHARS.default):CHARS.default))
+      ? (msg.charSnapshot || (mInRole ? (charCache[currentRole]||CHARS.default) : (currentRole!=="default"?(charCache[currentRole]||CHARS.default):CHARS.default)))
       : CHARS.default;
     const segments = isA ? parseSegments(msg.content) : null;
     return (
