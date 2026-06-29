@@ -2845,13 +2845,30 @@ export default function Profess() {
   // A whole line wrapped in single asterisks is a brief stage-direction beat
   // (e.g. "*Daniel goes quiet for a moment.*") — rendered smaller/muted in the
   // UI and never spoken aloud (stripped entirely in scrubForSpeech).
-  const STAGE_LINE_RE = /^\*([^*]+)\*$/;
+  // Inline action mixed onto the same line as dialogue (e.g.
+  // "*Claire looks up from her phone.* Ah, hey! I'm so glad you're here.") —
+  // the model fuses the beat and the line instead of putting the beat on
+  // its own line. Split this line into its asterisk-wrapped stage chunk(s)
+  // and the surrounding plain-text chunk(s) so each keeps its own styling
+  // (and the dialogue text doesn't get swallowed into the italic/muted beat).
+  const INLINE_STAGE_SPLIT_RE = /\*([^*]+)\*/g;
 
   const parseSegments = (text) => {
     const segments = [];
     const lines = text.split('\n');
     let inCoaching = false;
     let dialogStarted = false;
+    const pushChunk = (type, chunkText) => {
+      const t = chunkText.trim();
+      if (!t) return;
+      if (type === 'dialog') dialogStarted = true;
+      const last = segments.length > 0 ? segments[segments.length-1] : null;
+      if (last && last.type === type) {
+        last.text += ' ' + t;
+      } else {
+        segments.push({ type, text: t });
+      }
+    };
     for (const line of lines) {
       const trimmed = line.trim();
       if (!trimmed) continue;
@@ -2861,31 +2878,36 @@ export default function Profess() {
         segments.push({ type: 'section_break' });
         continue;
       }
-      const stageMatch = trimmed.match(STAGE_LINE_RE);
-      if (stageMatch && !inCoaching) {
-        segments.push({ type: 'stage', text: stageMatch[1].trim() });
+      const plainType = inCoaching ? 'coaching' : 'dialog';
+      if (!inCoaching && INLINE_STAGE_SPLIT_RE.test(trimmed)) {
+        // Walk the line in order, alternating plain text / *stage* chunks,
+        // so a beat fused onto the same line as dialogue still renders as
+        // two differently-styled pieces instead of one all-italic blob.
+        let lastIndex = 0;
+        INLINE_STAGE_SPLIT_RE.lastIndex = 0;
+        let m;
+        while ((m = INLINE_STAGE_SPLIT_RE.exec(trimmed))) {
+          pushChunk(plainType, trimmed.slice(lastIndex, m.index));
+          pushChunk('stage', m[1]);
+          lastIndex = m.index + m[0].length;
+        }
+        pushChunk(plainType, trimmed.slice(lastIndex));
         continue;
       }
       // Safety net for the model forgetting to wrap a narration beat in
-      // asterisks (e.g. "Claire looks up from her book..." sitting as its
-      // own line right before her quoted line). Only applies to a LEADING
-      // quote-free line before any dialogue has started in this turn — once
-      // dialogue is underway, a quote-free line is almost always just a
-      // continuation of the same quoted speech wrapping onto a new line
-      // (no quote mark on every line), not a new narration beat, so it must
-      // stay a normal dialog line instead of being demoted to italic/small.
+      // asterisks at all (e.g. "Claire looks up from her book..." sitting
+      // as its own line right before her quoted line). Only applies to a
+      // LEADING quote-free line before any dialogue has started in this
+      // turn — once dialogue is underway, a quote-free line is almost
+      // always just a continuation of the same quoted speech wrapping onto
+      // a new line (no quote mark on every line), not a new narration beat,
+      // so it must stay a normal dialog line instead of being demoted to
+      // italic/small.
       if (!inCoaching && !dialogStarted && !/["“”]/.test(trimmed)) {
         segments.push({ type: 'stage', text: trimmed });
         continue;
       }
-      const segType = inCoaching ? 'coaching' : 'dialog';
-      if (segType === 'dialog') dialogStarted = true;
-      const last = segments.length > 0 ? segments[segments.length-1] : null;
-      if (last && last.type === segType) {
-        last.text += ' ' + trimmed;
-      } else {
-        segments.push({ type: segType, text: trimmed });
-      }
+      pushChunk(plainType, trimmed);
     }
     return segments;
   };
@@ -2894,11 +2916,12 @@ export default function Profess() {
     .replace(/\[.*?\]/g, '')
     .replace(/\(\(.*?\)\)/g, '')
     .replace(/^---+$/gm, '')
-    // Whole-line stage-direction beats (*Daniel goes quiet for a moment.*) are
-    // never spoken — drop the entire line, not just the asterisk markers.
-    .replace(/^\s*\*[^*]+\*\s*$/gm, '')
+    // Stage-direction beats (*Daniel goes quiet for a moment.*) are never
+    // spoken — drop the whole bracketed action text, not just the asterisk
+    // markers, whether it's the entire line or fused inline before/after
+    // the actual dialogue on the same line.
     .replace(/\*\*(.*?)\*\*/g, '$1')
-    .replace(/\*(.*?)\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '')
     .replace(/_{1,2}(.*?)_{1,2}/g, '$1')
     .replace(/#{1,6}\s+/g, '')
     .replace(/`{1,3}[^`]*`{1,3}/g, '')
