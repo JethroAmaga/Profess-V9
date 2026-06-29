@@ -2,7 +2,7 @@ import { isRateLimited, isForeignOrigin, containsBannedContent, containsPromptLe
 
 const MAX_MESSAGES = 50;
 const MAX_CONTENT_CHARS = 6000;
-const MAX_SYSTEM_CHARS = 24000;
+const MAX_SYSTEM_CHARS = 30000;
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
