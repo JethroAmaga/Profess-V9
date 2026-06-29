@@ -3267,6 +3267,22 @@ export default function Profess() {
       const text = await callAPI(init, mode, lang, intensity);
       const turns = mergeTurns(splitTurns(text).map(parseTurn));
       setMessages([{ role:"user", content:initMsg }]);
+      // Deterministic onboarding guard: the weak model sometimes ignores the
+      // ONBOARDING instructions and jumps straight to inventing a character
+      // and dialog on this very first response (e.g. selecting a scenario
+      // card supplies a topic but no name, yet the model generates one
+      // anyway). Catch that here instead of trusting the model: if its very
+      // first turn is already in-role, discard it entirely (don't let an
+      // invented name/character enter the conversation) and ask the real
+      // TURN 1 question ourselves.
+      if (turns[0] && turns[0].modeTag === "dialog") {
+        const askWho = lang === "id"
+          ? "Cerita dong situasinya — ini sama siapa, dan gimana ceritanya?"
+          : "Tell me about the situation — who is this with, and what's going on?";
+        turnQueueRef.current = [];
+        pushTurn({ role:"default", mood:"neutral", modeTag:"coaching", charName:null, charTitle:null, charGender:null, clean: askWho });
+        return;
+      }
       turnQueueRef.current = turns.slice(1);
       pushTurn(turns[0]);
     } catch(e) { setError("Connection failed. Please try again."); }
