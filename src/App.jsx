@@ -1311,8 +1311,8 @@ const FlapCell = ({ target, delay, stepMs, flipDuration, mobileBoard }) => {
     };
   }, [target, delay, stepMs]);
 
-  const show = current === " " ? " " : current;
-  const showPrev = prev === " " ? " " : prev;
+  const show = current === " " ? " " : current;
+  const showPrev = prev === " " ? " " : prev;
   const cellTextStyle = { fontSize: mobileBoard ? "clamp(10px, 4.4vw, 20px)" : "clamp(7px, 1.8vw, 16px)", lineHeight:1, fontFamily:"'Manrope',monospace", fontWeight:700, letterSpacing:"0.03em" };
   const halfBase = { position:"absolute", insetInline:0, overflow:"hidden", background:"#181410", color:"#E9E5DC" };
   const textWrap = { position:"absolute", insetInline:0, display:"flex", alignItems:"center", justifyContent:"center", userSelect:"none", ...cellTextStyle };
@@ -2147,10 +2147,11 @@ export default function Profess() {
         segments.push({ type: 'section_break' });
         continue;
       }
-      const plainType = inCoaching ? 'coaching' : 'dialog';
-      // Stage directions are not a supported feature — all non-coaching lines
-      // render as normal dialog regardless of asterisks or quote marks.
-      pushChunk(plainType, trimmed);
+      if (!inCoaching && /^\*[^*].*[^*]\*$|^\*[^*]\*$/.test(trimmed)) {
+        pushChunk('stage', trimmed.slice(1, -1));
+        continue;
+      }
+      pushChunk(inCoaching ? 'coaching' : 'dialog', trimmed);
     }
     return segments;
   };
@@ -4555,6 +4556,11 @@ export default function Profess() {
               if (seg.type==="coaching") return (
                 <p key={si} style={{ fontSize:"13px", lineHeight:2, color:"6A6560", whiteSpace:"pre-wrap", fontStyle:"italic", paddingLeft:"16px" }}>
                   {renderMarkdown(seg.text)}
+                </p>
+              );
+              if (seg.type==="stage") return (
+                <p key={si} style={{ fontSize:"12px", lineHeight:1.7, color: mInRole ? mc.accent + "99" : "#6A6560", whiteSpace:"pre-wrap", fontStyle:"italic", paddingLeft:mInRole?"14px":"0" }}>
+                  {seg.text}
                 </p>
               );
               return (
