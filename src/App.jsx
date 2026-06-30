@@ -1311,8 +1311,8 @@ const FlapCell = ({ target, delay, stepMs, flipDuration, mobileBoard }) => {
     };
   }, [target, delay, stepMs]);
 
-  const show = current === " " ? " " : current;
-  const showPrev = prev === " " ? " " : prev;
+  const show = current === " " ? " " : current;
+  const showPrev = prev === " " ? " " : prev;
   const cellTextStyle = { fontSize: mobileBoard ? "clamp(10px, 4.4vw, 20px)" : "clamp(7px, 1.8vw, 16px)", lineHeight:1, fontFamily:"'Manrope',monospace", fontWeight:700, letterSpacing:"0.03em" };
   const halfBase = { position:"absolute", insetInline:0, overflow:"hidden", background:"#181410", color:"#E9E5DC" };
   const textWrap = { position:"absolute", insetInline:0, display:"flex", alignItems:"center", justifyContent:"center", userSelect:"none", ...cellTextStyle };
@@ -1842,6 +1842,7 @@ export default function Profess() {
   const [isTalking, setIsTalking] = useState(false); // mouth animation
   const [speechEnabled, setSpeechEnabled] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [inCoachMode, setInCoachMode] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [micError, setMicError] = useState(null);
   const [showPlayer, setShowPlayer] = useState(false);
@@ -2840,11 +2841,22 @@ export default function Profess() {
     const coachMsg = lang === "id"
       ? "(Tolong hentikan sebentar roleplay-nya — saya butuh masukan dari Profess sebagai pelatih sekarang.)"
       : "(Please pause the roleplay for a moment — I need feedback from Profess as my coach right now.)";
+    setInCoachMode(true);
     setInput(coachMsg);
     setTimeout(() => document.getElementById("psend")?.click(), 50);
   };
 
-  const resetSession = () => { stopSpeech(); turnQueueRef.current = []; currentRoleRef.current = "default"; recognitionRef.current?.stop(); setScreen("lang"); setLang(null); setSessionMode(null); setPendingMode(null); setIntensity(null); setScenario(null); setSummary(null); setLastExchange(null); setMessages([]); setInput(""); setError(null); setCurrentRole("default"); setCurrentMood("neutral"); setIsInRole(false); setIsTransitioning(false); setIsListening(false); setMicError(null); setCharCache({}); setShowMusicSuggest(false); hasOpenedMusic.current = false; };
+  const continueRoleplay = () => {
+    if (loading) return;
+    setInCoachMode(false);
+    const continueMsg = lang === "id"
+      ? "(Lanjutkan roleplay-nya.)"
+      : "(Continue the roleplay.)";
+    setInput(continueMsg);
+    setTimeout(() => document.getElementById("psend")?.click(), 50);
+  };
+
+  const resetSession = () => { stopSpeech(); turnQueueRef.current = []; currentRoleRef.current = "default"; recognitionRef.current?.stop(); setScreen("lang"); setLang(null); setSessionMode(null); setPendingMode(null); setIntensity(null); setScenario(null); setSummary(null); setLastExchange(null); setMessages([]); setInput(""); setError(null); setCurrentRole("default"); setCurrentMood("neutral"); setIsInRole(false); setIsTransitioning(false); setIsListening(false); setMicError(null); setCharCache({}); setShowMusicSuggest(false); hasOpenedMusic.current = false; setInCoachMode(false); };
 
   const displayRole = (isInRole || currentRole !== "default") ? currentRole : "default";
   const charMeta = displayRole === "default"
@@ -4536,6 +4548,9 @@ export default function Profess() {
   };
 
   const coachIconSVG = buildSVG(CHARS.default, "neutral", false);
+  const charIconSVG = (displayRole !== "default" && charCache[displayRole])
+    ? buildSVG(charCache[displayRole], "neutral", false)
+    : coachIconSVG;
   const inputControls = (inputFs="15px", inputPad="12px 14px", btnSz="52px") => (
     <div style={{ display:"flex", flexDirection:"column", gap:"8px" }}>
       {micError && <p style={{ fontSize:"10px", color:"#BC5A5A", textAlign:"center" }}>{micError}</p>}
@@ -4554,11 +4569,12 @@ export default function Profess() {
           </button>
         )}
         <div style={{ display:"flex", flexWrap:isMobile?"wrap":"nowrap", border:"1px solid #1A1A1A", width:isMobile?`calc(${btnSz} * 2 + 2px)`:"auto", height:isMobile?`calc(${btnSz} * 2 + 2px)`:btnSz, flexShrink:0, boxSizing:"border-box" }}>
-          <button onClick={askCoach} disabled={loading} title={lang==="id"?"Tanya Pelatih":"Ask Coach"}
-            style={{ background:"none", border:"none", borderRight:"1px solid #1A1A1A", borderBottom:isMobile?"1px solid #1A1A1A":"none", color:"#C8A458", width:btnSz, height:btnSz, boxSizing:"border-box", padding:0, margin:0, display:"flex", alignItems:"center", justifyContent:"center", cursor:loading?"default":"pointer", opacity:loading?0.4:1, transition:"background .2s, color .2s" }}
-            onMouseEnter={e=>{ if(!loading){ e.currentTarget.style.background="#1A1612"; e.currentTarget.style.color="#C8A870"; } }}
-            onMouseLeave={e=>{ e.currentTarget.style.background="none"; e.currentTarget.style.color="#C8A458"; }}>
-            <div style={{ width:"20px", height:"25px" }} dangerouslySetInnerHTML={{ __html: coachIconSVG }}/>
+          <button onClick={inCoachMode ? continueRoleplay : askCoach} disabled={loading}
+            title={inCoachMode ? (lang==="id"?"Lanjut Roleplay":"Continue Roleplay") : (lang==="id"?"Tanya Pelatih":"Ask Coach")}
+            style={{ background:inCoachMode?"#0E1208":"none", border:"none", borderRight:"1px solid #1A1A1A", borderBottom:isMobile?"1px solid #1A1A1A":"none", color:inCoachMode?"#8AAA58":"#C8A458", width:btnSz, height:btnSz, boxSizing:"border-box", padding:0, margin:0, display:"flex", alignItems:"center", justifyContent:"center", cursor:loading?"default":"pointer", opacity:loading?0.4:1, transition:"background .2s, color .2s" }}
+            onMouseEnter={e=>{ if(!loading){ e.currentTarget.style.background=inCoachMode?"#141A08":"#1A1612"; e.currentTarget.style.color=inCoachMode?"#AACB70":"#C8A870"; } }}
+            onMouseLeave={e=>{ e.currentTarget.style.background=inCoachMode?"#0E1208":"none"; e.currentTarget.style.color=inCoachMode?"#8AAA58":"#C8A458"; }}>
+            <div style={{ width:"20px", height:"25px" }} dangerouslySetInnerHTML={{ __html: inCoachMode ? charIconSVG : coachIconSVG }}/>
           </button>
           <button onClick={toggleMic} disabled={isSpeaking} className={isListening?"mic-active":""}
             style={{ background:isListening?"#180C0C":"none", border:"none", borderRight:isMobile?"none":"1px solid #1A1A1A", borderBottom:isMobile?"1px solid #1A1A1A":"none", color:isListening?"#BC7A7A":isSpeaking?"#2A2A2A":"#C8A458", width:btnSz, height:btnSz, boxSizing:"border-box", padding:0, margin:0, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .2s", opacity:isSpeaking?0.4:1, cursor:isSpeaking?"default":"pointer" }}
