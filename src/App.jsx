@@ -1843,6 +1843,11 @@ export default function Profess() {
   const [speechEnabled, setSpeechEnabled] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [inCoachMode, setInCoachMode] = useState(false);
+  const [lastCharRole, setLastCharRole] = useState(null); // persists char role during coach detour
+  // Track last known character role so the button icon stays correct during coach mode
+  useEffect(() => { if (isInRole && currentRole !== "default") setLastCharRole(currentRole); }, [isInRole, currentRole]);
+  // Reset coach mode as soon as the character resumes speaking in-role
+  useEffect(() => { if (isInRole) setInCoachMode(false); }, [isInRole]);
   const [isListening, setIsListening] = useState(false);
   const [micError, setMicError] = useState(null);
   const [showPlayer, setShowPlayer] = useState(false);
@@ -2848,7 +2853,7 @@ export default function Profess() {
 
   const continueRoleplay = () => {
     if (loading) return;
-    setInCoachMode(false);
+    // inCoachMode stays true until the character actually resumes (see useEffect below)
     const continueMsg = lang === "id"
       ? "(Lanjutkan roleplay-nya.)"
       : "(Continue the roleplay.)";
@@ -4548,8 +4553,8 @@ export default function Profess() {
   };
 
   const coachIconSVG = buildSVG(CHARS.default, "neutral", false);
-  const charIconSVG = (displayRole !== "default" && charCache[displayRole])
-    ? buildSVG(charCache[displayRole], "neutral", false)
+  const charIconSVG = (lastCharRole && charCache[lastCharRole])
+    ? buildSVG(charCache[lastCharRole], "neutral", false)
     : coachIconSVG;
   const inputControls = (inputFs="15px", inputPad="12px 14px", btnSz="52px") => (
     <div style={{ display:"flex", flexDirection:"column", gap:"8px" }}>
