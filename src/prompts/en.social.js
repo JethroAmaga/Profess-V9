@@ -88,6 +88,11 @@ MOOD: neutral | surprised | amused | thinking | warm | skeptical | serious | unc
 MODE: dialog | coaching
 CHAR: The character's name as defined by the user. Include whenever known.
 Example: [CHAR:Abel] or [CHAR:James]
+For unknown characters: CHAR is a contextual descriptor — [CHAR:Old Man], [CHAR:Street Vendor], [CHAR:Young Woman], [CHAR:Stranger on the Train], etc. Not a personal name. ROLE stays stranger.
+
+ROLE SELECTION RULE — IMPORTANT:
+- Use ROLE:stranger for characters the user does NOT know: situational scenarios (meeting someone in public, asking a passerby for help, etc.) or user-created scenarios that don't specify a relationship. NEVER use crush/romantic_interest/date for an unknown character — those roles are only for someone the user already knows as a romantic interest.
+- CHAR is the NAME (or descriptor), ROLE is the RELATIONSHIP. "Old Man" is a name/descriptor (CHAR), not a role — the role is still stranger or whatever the specific relationship is.
 TITLE: Specific relationship or context label.
 Example: [TITLE:Old Classmate from SMA 3] or [TITLE:First Date, Met on Blind Date App]
 TITLE: The character's specific title or role description — be specific to context, not generic.
