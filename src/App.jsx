@@ -2617,10 +2617,7 @@ export default function Profess() {
         charNameFixed = canonCharNameRef.current;
       }
     }
-    if (inRole && role) {
-      lastCharRoleRef.current = role;
-      lastInRoleTurnRef.current = { role, mood, modeTag: "dialog", charName: charNameFixed, charTitle, charGender: charGenderFixed, clean };
-    }
+    if (inRole && role) lastCharRoleRef.current = role;
 
     // Gender lock (see canonCharGenderRef above): trust the first gender we
     // ever see for this character, then keep reapplying it even on turns
@@ -2633,6 +2630,11 @@ export default function Profess() {
       } else if (!charGenderFixed && canonCharGenderRef.current) {
         charGenderFixed = canonCharGenderRef.current;
       }
+    }
+
+    // Snapshot the last in-role turn so continueRoleplay() can replay it exactly.
+    if (inRole && role) {
+      lastInRoleTurnRef.current = { role, mood, modeTag: "dialog", charName: charNameFixed, charTitle, charGender: charGenderFixed, clean };
     }
 
     // Coaching turns must always render as Profess (default avatar), even
