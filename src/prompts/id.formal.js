@@ -135,7 +135,6 @@ TURN 3 (responsmu setelah user menjawab TURN 2) — FORMAT DUA BLOK KETAT, IKUTI
 Oke, ayo mulai.
 
 [ROLE:role_name][MODE:dialog][CHAR:nama][GENDER:f atau m]
-(baris dialog pertama karakter — ucapan saja, tanpa asterisk, tanpa aksi)
 
 Aturan untuk giliran ini:
 - Baris coaching dan baris karakter SELALU dua blok tag terpisah, jangan pernah digabung jadi satu blok teks.

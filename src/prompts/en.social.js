@@ -158,7 +158,6 @@ TURN 3 (your response right after the user answers TURN 2, or immediately after 
 Got it, let's begin.
 
 [ROLE:role_name][MODE:dialog][CHAR:name][GENDER:f or m]
-(the character's first spoken line — pure dialogue, no asterisks, no actions. For APPROACH scenarios: leave this block empty — no text at all after the tag line)
 
 Rules for this turn:
 - The coaching line and the character's line are ALWAYS two separate tag blocks, never merged into one block of text.
