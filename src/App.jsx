@@ -4676,12 +4676,12 @@ export default function Profess() {
   };
 
   return (
-    <div style={{ ...BASE, display:"flex", flexDirection:"column" }}>
+    <div style={{ ...BASE, display:"flex", flexDirection:"column", height:"100vh", overflow:"hidden" }}>
       <style>{css}</style>
       <div style={{ position:"fixed", inset:0, pointerEvents:"none", zIndex:-1 }}><DottedGlowBackground/></div>
 
       {/* Session header */}
-      <div style={{ padding:`0 ${isMobile?"16px":"32px"}`, height:isMobile?"48px":"56px", borderBottom:"1px solid #141414", display:"flex", alignItems:"center", gap:"16px", flexShrink:0 }}>
+      <div style={{ padding:`0 ${isMobile?"16px":"32px"}`, height:isMobile?"48px":"56px", borderBottom:"1px solid #141414", display:"flex", alignItems:"center", gap:"16px", flexShrink:0, zIndex:10, position:"relative" }}>
         <Wordmark size={isMobile?"15px":"17px"}/>
         {!isMobile && <>
           <span style={{ width:"1px", height:"12px", background:"#1A1A1A", flexShrink:0 }}/>
