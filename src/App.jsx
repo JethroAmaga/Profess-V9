@@ -1857,7 +1857,7 @@ export default function Profess() {
   const currentRoleRef = useRef("default");
   const isInRoleRef = useRef(false);
   const lastCharRoleRef = useRef("default"); // last role seen in MODE:dialog, untouched by coaching turns
-  const expectingResumeRef = useRef(false); // set by continueRoleplay(); forces next parsed turn to dialog+character
+  const lastInRoleTurnRef = useRef(null); // snapshot of the last in-role turn, replayed by continueRoleplay()
   // Locks the character's name to whatever the user actually typed during
   // onboarding (e.g. "Her name is Claire"), so a weak-model name drift later
   // in the session ("Claire" → "Emma") gets silently corrected back to the
@@ -2001,23 +2001,14 @@ export default function Profess() {
       ? (lastCharRoleRef.current !== "default" && lastCharRoleRef.current ? lastCharRoleRef.current
         : "char_" + nameIntroMatch[1].toLowerCase().replace(/[^a-z]+/g, "_"))
       : null;
-    // If continueRoleplay() was just called, the model's first response must be
-    // character dialog regardless of what tag it emits — clear the flag and override.
-    let forcedResume = false;
-    if (expectingResumeRef.current) {
-      expectingResumeRef.current = false;
-      forcedResume = true;
-    }
-    let modeTag = forcedResume ? "dialog" : (taggedMode || (introOnly ? "dialog" : (isInRoleRef.current ? "dialog" : "coaching")));
+    let modeTag = taggedMode || (introOnly ? "dialog" : (isInRoleRef.current ? "dialog" : "coaching"));
     // Resolve the untagged-role fallback from modeTag (which already accounts
     // for an explicit [MODE:dialog] tag), not from the stale isInRoleRef —
     // otherwise an untagged turn that follows a coaching interruption (which
     // left isInRoleRef false) keeps falling back to currentRoleRef ("default")
     // even though this turn is explicitly tagged back into dialog, stranding
     // the avatar/label on Profess after the character should have returned.
-    let role = forcedResume
-      ? (lastCharRoleRef.current && lastCharRoleRef.current !== "default" ? lastCharRoleRef.current : (taggedRole || currentRoleRef.current))
-      : (taggedRole || introRoleKey || (modeTag === "dialog" ? lastCharRoleRef.current : currentRoleRef.current));
+    let role = taggedRole || introRoleKey || (modeTag === "dialog" ? lastCharRoleRef.current : currentRoleRef.current);
     let charName = taggedChar || (introOnly ? nameIntroMatch[1] : null);
     // The spec only ever pairs [ROLE:default] with [MODE:coaching] — the model
     // occasionally mistags an established character's dialog continuation as
@@ -2626,7 +2617,10 @@ export default function Profess() {
         charNameFixed = canonCharNameRef.current;
       }
     }
-    if (inRole && role) lastCharRoleRef.current = role;
+    if (inRole && role) {
+      lastCharRoleRef.current = role;
+      lastInRoleTurnRef.current = { role, mood, modeTag: "dialog", charName: charNameFixed, charTitle, charGender: charGenderFixed, clean };
+    }
 
     // Gender lock (see canonCharGenderRef above): trust the first gender we
     // ever see for this character, then keep reapplying it even on turns
@@ -2863,13 +2857,10 @@ export default function Profess() {
 
   const continueRoleplay = () => {
     if (loading) return;
-    // inCoachMode stays true until the character actually resumes (see useEffect below)
-    expectingResumeRef.current = true;
-    const continueMsg = lang === "id"
-      ? "(Lanjutkan roleplay-nya.)"
-      : "(Continue the roleplay.)";
-    setInput(continueMsg);
-    setTimeout(() => document.getElementById("psend")?.click(), 50);
+    if (!lastInRoleTurnRef.current) return;
+    // Replay the character's last line exactly — no API call needed.
+    // inCoachMode will clear via the useEffect that watches isInRole.
+    pushTurn(lastInRoleTurnRef.current);
   };
 
   const resetSession = () => { stopSpeech(); turnQueueRef.current = []; currentRoleRef.current = "default"; recognitionRef.current?.stop(); setScreen("lang"); setLang(null); setSessionMode(null); setPendingMode(null); setIntensity(null); setScenario(null); setSummary(null); setLastExchange(null); setMessages([]); setInput(""); setError(null); setCurrentRole("default"); setCurrentMood("neutral"); setIsInRole(false); setIsTransitioning(false); setIsListening(false); setMicError(null); setCharCache({}); setShowMusicSuggest(false); hasOpenedMusic.current = false; setInCoachMode(false); };
