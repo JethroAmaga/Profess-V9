@@ -170,11 +170,11 @@ const NAME_POOL = {
   blind_date:       N("Her","Him","Her","Him","Ella","Él","Her","Him","Her","Him","Her","Him","Dia","Dia"),
   host:             N("Rachel","Tom","Eva","Jonas","Paula","Felipe","Amina","Kwesi","Sunita","Kiran","Mia","Jason","Dina","Dimas"),
   guest:            N("Rachel","Tom","Eva","Jonas","Paula","Felipe","Amina","Kwesi","Sunita","Kiran","Mia","Jason","Dina","Dimas"),
-  fellow_passenger:  N("A woman","A man","A woman","A man","A woman","A man","A woman","A man","A woman","A man","A woman","A man","Seseorang","Seseorang"),
+  fellow_passenger:  N("Ingrid","Lars","Céleste","Théo","Valentina","Mateo","Zuri","Kofi","Priya","Arjun","Yuki","Kenji","Sari","Bagas"),
   customer_service:  N("Sarah","James","Claire","Thomas","Isabella","Carlos","Amara","Marcus","Priya","Arjun","Mei","Wei","Siti","Budi"),
-  bookstore_stranger:N("A woman","A man","A woman","A man","A woman","A man","A woman","A man","A woman","A man","A woman","A man","Seseorang","Seseorang"),
-  golf_partner:      N("A woman","A man","A woman","A man","A woman","A man","A woman","A man","A woman","A man","A woman","A man","Seseorang","Seseorang"),
-  padel_partner:     N("A woman","A man","A woman","A man","A woman","A man","A woman","A man","A woman","A man","A woman","A man","Seseorang","Seseorang"),
+  bookstore_stranger:N("Elise","Owen","Léa","Hugo","Camila","Diego","Amara","Kwame","Ananya","Rohan","Hana","Jun","Putri","Rizky"),
+  golf_partner:      N("A woman","Alistair","A woman","Charles","Isabella","A man","A woman","Marcus","Priya","A man","A woman","Kenji","Seseorang","Bagas"),
+  padel_partner:     N("Sofia","Marco","A woman","Luca","Valentina","A man","Zuri","A man","Priya","Vikram","A woman","Jae","Dinda","Rizky"),
   // Indonesia kontekstual
   pak_rt:           N("Bu RT","Pak RT","Bu RT","Pak RT","Bu RT","Pak RT","Bu RT","Pak RT","Bu RT","Pak RT","Bu RT","Pak RT","Bu RT","Pak RT"),
   dosen_pembimbing: N("Prof. Wijaya","Prof. Santoso","Prof. Wijaya","Prof. Santoso","Prof. Wijaya","Prof. Santoso","Prof. Wijaya","Prof. Santoso","Prof. Wijaya","Prof. Santoso","Prof. Wijaya","Prof. Santoso","Prof. Wijaya","Prof. Santoso"),
@@ -944,14 +944,15 @@ break;
           ${outfitAccent(80,150,50)}
           ${armL}${armR}`;
         frontProps = `
-          <!-- Golf club grip at left hand -->
+          ${legsFeetSVG}
+          <!-- Golf club — rendered AFTER legs so it appears on top -->
+          <!-- Grip at left hand -->
           <rect x="20" y="186" width="12" height="5" fill="#1A1A1A" rx="2"/>
-          <!-- Shaft from left hand to ground -->
+          <!-- Shaft -->
           <line x1="26" y1="189" x2="88" y2="236" stroke="#C8C0B0" stroke-width="2.5" stroke-linecap="round"/>
           <!-- Club head (iron) -->
           <rect x="83" y="232" width="14" height="7" fill="#B0A898" rx="2"/>
-          <rect x="83" y="235" width="14" height="2" fill="#888070" opacity=".8"/>
-          ${legsFeetSVG}`;
+          <rect x="83" y="235" width="14" height="2" fill="#888070" opacity=".8"/>`;
         hideLegs = true; break;
 
       // ── Padel partner — court + racket ────────────────────────────────
@@ -974,34 +975,36 @@ break;
           <line x1="0"  y1="192" x2="160" y2="192" stroke="#fff" stroke-width="1"  opacity=".2"/>
           <line x1="80" y1="170" x2="80"  y2="240" stroke="#fff" stroke-width=".8" opacity=".15"/>
           <!-- Padel ball on ground -->
-          <circle cx="118" cy="222" r="5" fill="#C8D840"/>
-          <path d="M114 220 Q118 218 122 220" stroke="#A0B020" stroke-width=".8" fill="none"/>`;
+          <circle cx="128" cy="222" r="5" fill="#C8D840"/>
+          <path d="M124 220 Q128 218 132 220" stroke="#A0B020" stroke-width=".8" fill="none"/>`;
         bodySVG = `<rect x="42" y="130" rx="12" width="76" height="90" fill="url(#outfitGrad)"/>
           <path d="M60 130 Q80 142 100 130" fill="none" stroke="${darken(b,10)}" stroke-width="1.5"/>
           ${outfitAccent(80,150,50)}
           ${armL}${armR}`;
         frontProps = `
-          <!-- Padel racket — handle connects into oval head seamlessly -->
-          <!-- Handle -->
-          <rect x="124" y="168" width="9" height="28" fill="#4A3020" rx="3" transform="rotate(-20 128 182)"/>
-          <!-- Grip wrap marks -->
-          <rect x="124" y="174" width="9" height="3" fill="#2A1A10" opacity=".6" transform="rotate(-20 128 182)"/>
-          <rect x="124" y="179" width="9" height="3" fill="#2A1A10" opacity=".6" transform="rotate(-20 128 182)"/>
-          <!-- Racket neck (bridge between handle and head) -->
-          <rect x="124" y="158" width="9" height="14" fill="#3A3A3A" rx="2" transform="rotate(-20 128 165)"/>
-          <!-- Racket head oval — centred at handle top after rotation -->
-          <ellipse cx="122" cy="138" rx="20" ry="24" fill="#2A2A2A" transform="rotate(-20 122 138)"/>
-          <ellipse cx="122" cy="138" rx="20" ry="24" fill="none" stroke="#5A5A5A" stroke-width="3" transform="rotate(-20 122 138)"/>
-          <!-- Hole pattern -->
-          <circle cx="116" cy="130" r="2.5" fill="#2A3A5A" opacity=".8" transform="rotate(-20 122 138)"/>
-          <circle cx="124" cy="126" r="2.5" fill="#2A3A5A" opacity=".8" transform="rotate(-20 122 138)"/>
-          <circle cx="130" cy="133" r="2.5" fill="#2A3A5A" opacity=".8" transform="rotate(-20 122 138)"/>
-          <circle cx="114" cy="138" r="2.5" fill="#2A3A5A" opacity=".8" transform="rotate(-20 122 138)"/>
-          <circle cx="122" cy="136" r="2.5" fill="#2A3A5A" opacity=".8" transform="rotate(-20 122 138)"/>
-          <circle cx="128" cy="143" r="2.5" fill="#2A3A5A" opacity=".8" transform="rotate(-20 122 138)"/>
-          <circle cx="118" cy="146" r="2.5" fill="#2A3A5A" opacity=".8" transform="rotate(-20 122 138)"/>
-          <!-- Brand line -->
-          <line x1="114" y1="138" x2="130" y2="138" stroke="#C8A458" stroke-width=".8" opacity=".5" transform="rotate(-20 122 138)"/>
+          <!-- Padel racket — all parts share one pivot so nothing gaps -->
+          <g transform="rotate(-20 128 196)">
+            <!-- Handle -->
+            <rect x="123" y="171" width="10" height="25" fill="#4A3020" rx="3"/>
+            <!-- Grip marks -->
+            <rect x="123" y="177" width="10" height="3" fill="#2A1A10" opacity=".6"/>
+            <rect x="123" y="183" width="10" height="3" fill="#2A1A10" opacity=".6"/>
+            <!-- Neck — bottom at y=172 meets handle top, top at y=154 meets oval bottom -->
+            <rect x="124" y="153" width="8" height="19" fill="#3A3A3A" rx="1"/>
+            <!-- Oval head — bottom at y=154 (cy=131 + ry=23) -->
+            <ellipse cx="128" cy="131" rx="19" ry="23" fill="#2A2A2A"/>
+            <ellipse cx="128" cy="131" rx="19" ry="23" fill="none" stroke="#5A5A5A" stroke-width="3"/>
+            <!-- Hole pattern -->
+            <circle cx="121" cy="123" r="2.5" fill="#2A3A5A" opacity=".8"/>
+            <circle cx="129" cy="119" r="2.5" fill="#2A3A5A" opacity=".8"/>
+            <circle cx="135" cy="127" r="2.5" fill="#2A3A5A" opacity=".8"/>
+            <circle cx="119" cy="131" r="2.5" fill="#2A3A5A" opacity=".8"/>
+            <circle cx="128" cy="129" r="2.5" fill="#2A3A5A" opacity=".8"/>
+            <circle cx="134" cy="136" r="2.5" fill="#2A3A5A" opacity=".8"/>
+            <circle cx="122" cy="139" r="2.5" fill="#2A3A5A" opacity=".8"/>
+            <!-- Brand line -->
+            <line x1="119" y1="131" x2="137" y2="131" stroke="#C8A458" stroke-width=".8" opacity=".5"/>
+          </g>
           ${legsFeetSVG}`;
         hideLegs = true; break;
 
@@ -3399,7 +3402,7 @@ export default function Profess() {
 
   // ── LANDING ────────────────────────────────────────────────────────────────
   if (screen === "landing") {
-    const heroRoleDesc = r => ({ interviewer:"Formal — interviews & performance reviews", reviewer:"Formal — interviews & performance reviews", auditor:"Formal — interviews & performance reviews", examiner:"Formal — thesis defense & academic sessions", professor_academic:"Formal — thesis defense & academic sessions", dean:"Formal — thesis defense & academic sessions", journalist:"Formal — press conferences & media training", critic:"Formal — press conferences & media training", judge:"Formal — mock trials & debate adjudication", prosecutor:"Formal — mock trials & debate adjudication", cross_examiner:"Formal — mock trials & debate adjudication", friend_female:"Social — reconnecting & casual conversation", friend_male:"Social — reconnecting & casual conversation", best_friend:"Social — reconnecting & casual conversation", colleague:"Social — workplace dynamics & office talk", manager:"Social — workplace dynamics & office talk", subordinate:"Social — workplace dynamics & office talk", crush:"Social — romantic & flirtatious situations", romantic_interest:"Social — romantic & flirtatious situations", date:"Social — romantic & flirtatious situations", stranger:"Social — first impressions & small talk", new_acquaintance:"Social — first impressions & small talk", negotiator:"Formal — pitching, negotiation & boardroom", ceo:"Formal — pitching, negotiation & boardroom", executive:"Formal — pitching, negotiation & boardroom", acquirer:"Formal — pitching, negotiation & boardroom", parent:"Social — family conversations", grandparent:"Social — family conversations", calon_mertua:"Social — family conversations", mentor:"Formal — mentorship & guidance sessions", senior:"Formal — mentorship & guidance sessions" }[r] || "Available across all session types");
+    const heroRoleDesc = r => ({ interviewer:"Formal — interviews & performance reviews", reviewer:"Formal — interviews & performance reviews", auditor:"Formal — interviews & performance reviews", examiner:"Formal — thesis defense & academic sessions", professor_academic:"Formal — thesis defense & academic sessions", dean:"Formal — thesis defense & academic sessions", journalist:"Formal — press conferences & media training", critic:"Formal — press conferences & media training", judge:"Formal — mock trials & debate adjudication", prosecutor:"Formal — mock trials & debate adjudication", cross_examiner:"Formal — mock trials & debate adjudication", friend_female:"Social — reconnecting & casual conversation", friend_male:"Social — reconnecting & casual conversation", best_friend:"Social — reconnecting & casual conversation", colleague:"Social — workplace dynamics & office talk", manager:"Social — workplace dynamics & office talk", subordinate:"Social — workplace dynamics & office talk", crush:"Social — romantic & flirtatious situations", romantic_interest:"Social — romantic & flirtatious situations", date:"Social — romantic & flirtatious situations", stranger:"Social — first impressions & small talk", new_acquaintance:"Social — first impressions & small talk", negotiator:"Formal — pitching, negotiation & boardroom", ceo:"Formal — pitching, negotiation & boardroom", executive:"Formal — pitching, negotiation & boardroom", acquirer:"Formal — pitching, negotiation & boardroom", parent:"Social — family conversations", grandparent:"Social — family conversations", calon_mertua:"Social — family conversations", mentor:"Formal — mentorship & guidance sessions", senior:"Formal — mentorship & guidance sessions", golf_partner:"Situational — golf course networking", padel_partner:"Situational — padel court networking", bookstore_stranger:"Situational — bookstore encounter", fellow_passenger:"Situational — travel small talk" }[r] || "Available across all session types");
     const { sofaLeft, sofaRight, beginPanel, aboutPanel, termsPanel, heroRow } = landingChars.current;
     const roomMaleMood = agitated.roomMale ? "uncomfortable" : roomMood;
     const roomFemaleMood = agitated.roomFemale ? "uncomfortable" : roomMood;
