@@ -2377,7 +2377,7 @@ export default function Profess() {
   // despite the prompt's tag examples having none — \s* tolerates both so
   // the tag is still recognized and stripped instead of leaking into the
   // visible chat text.
-  const extractRole = (t) => (t.match(/\[ROLE:\s*(\w+)\]/) || [])[1] || null;
+  const extractRole = (t) => (t.match(/\[ROLE:\s*([^\]]+)\]/) || [])[1]?.trim().replace(/\s+/g,"_").toLowerCase() || null;
   const extractMood = (t) => (t.match(/\[MOOD:\s*(\w+)\]/) || [])[1] || null;
   const extractMode = (t) => (t.match(/\[MODE:\s*(\w+)\]/) || [])[1] || null;
   // Block only question-words that are never valid names.
@@ -2389,7 +2389,7 @@ export default function Profess() {
   // model writes despite no longer being instructed to — inner thoughts and
   // stage directions are not a supported feature, never rendered or spoken.
   const cleanText = (t) => t
-    .replace(/\[ROLE:\s*\w+\]/g,"").replace(/\[MOOD:\s*\w+\]/g,"")
+    .replace(/\[ROLE:\s*[^\]]+\]/g,"").replace(/\[MOOD:\s*\w+\]/g,"")
     .replace(/\[MODE:\s*\w+\]/g,"").replace(/\[INNER:\s*.*?\]/g,"")
     .replace(/\[CHAR:\s*[^\]]+\]/g,"").replace(/\[TITLE:\s*[^\]]+\]/g,"")
     .replace(/\[GENDER:\s*[^\]]+\]/g,"")
