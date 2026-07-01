@@ -1,8 +1,20 @@
 import { isRateLimited, isForeignOrigin, containsBannedContent, containsPromptLeak } from "./_security.js";
+import enFormal from "../src/prompts/en.formal.js";
+import enSocial from "../src/prompts/en.social.js";
+import idFormal from "../src/prompts/id.formal.js";
+import idSocial from "../src/prompts/id.social.js";
+
+const PROMPTS = {
+  en: { formal: enFormal, social: enSocial },
+  id: { formal: idFormal, social: idSocial },
+};
+
+const VALID_LANGS = new Set(["en", "id"]);
+const VALID_MODES = new Set(["formal", "social"]);
+const VALID_INTENSITIES = new Set(["comfortable", "challenging", "no_mercy"]);
 
 const MAX_MESSAGES = 50;
 const MAX_CONTENT_CHARS = 6000;
-const MAX_SYSTEM_CHARS = 55000;
 
 const PRIMARY_MODEL  = "qwen/qwen3-next-80b-a3b-instruct";
 const FALLBACK_MODEL = "meta/llama-3.3-70b-instruct";
@@ -53,16 +65,22 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: { message: "NVIDIA_API_KEY not configured" } });
   }
 
-  const { system, messages } = req.body || {};
+  const { lang, mode, intensity, messages } = req.body || {};
 
-  if (system != null && (typeof system !== "string" || system.length > MAX_SYSTEM_CHARS)) {
-    return res.status(400).json({ error: { message: "Invalid system prompt" } });
+  if (!VALID_LANGS.has(lang)) {
+    return res.status(400).json({ error: { message: "Invalid lang" } });
+  }
+  if (!VALID_MODES.has(mode)) {
+    return res.status(400).json({ error: { message: "Invalid mode" } });
+  }
+  if (intensity != null && !VALID_INTENSITIES.has(intensity)) {
+    return res.status(400).json({ error: { message: "Invalid intensity" } });
   }
   if (!Array.isArray(messages) || messages.length === 0 || messages.length > MAX_MESSAGES) {
     return res.status(400).json({ error: { message: "Invalid messages" } });
   }
   for (const m of messages) {
-    if (!m || typeof m.content !== "string" || m.content.length > MAX_CONTENT_CHARS) {
+    if (!m || !["user", "assistant"].includes(m.role) || typeof m.content !== "string" || m.content.length > MAX_CONTENT_CHARS) {
       return res.status(400).json({ error: { message: "Invalid message content" } });
     }
     if (m.role === "user" && containsBannedContent(m.content)) {
@@ -70,7 +88,10 @@ export default async function handler(req, res) {
     }
   }
 
-  const nimMessages = system ? [{ role: "system", content: system }, ...messages] : messages;
+  const rawPrompt = PROMPTS[lang][mode];
+  const system = rawPrompt.replace(/\{\{INTENSITY\}\}/g, intensity || "challenging");
+
+  const nimMessages = [{ role: "system", content: system }, ...messages];
 
   let text = "";
   let usedFallback = false;
