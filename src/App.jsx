@@ -86,8 +86,8 @@ const ROLE_TITLES = {
   date:"Date", blind_date:"Blind Date", host:"Host",
   guest:"Guest", fellow_passenger:"Fellow Passenger",
   customer_service:"Customer Service",
-  bookstore_stranger:"Bookstore", golf_partner:"Golf Partner",
-  padel_partner:"Padel Partner",
+  bookstore_stranger:"Bookstore Stranger", golf_partner:"Golf Partner",
+  padel_partner:"Padel Partner", travel_companion:"Travel Companion",
   // Indonesia kontekstual
   pak_rt:"Pak RT", dosen_pembimbing:"Dosen Pembimbing",
   calon_mertua:"Calon Mertua", senior_organisasi:"Senior Organisasi",
@@ -171,6 +171,7 @@ const NAME_POOL = {
   host:             N("Rachel","Tom","Eva","Jonas","Paula","Felipe","Amina","Kwesi","Sunita","Kiran","Mia","Jason","Dina","Dimas"),
   guest:            N("Rachel","Tom","Eva","Jonas","Paula","Felipe","Amina","Kwesi","Sunita","Kiran","Mia","Jason","Dina","Dimas"),
   fellow_passenger:  N("Ingrid","Lars","Céleste","Théo","Valentina","Mateo","Zuri","Kofi","Priya","Arjun","Yuki","Kenji","Sari","Bagas"),
+  travel_companion:  N("Ingrid","Lars","Céleste","Théo","Valentina","Mateo","Zuri","Kofi","Priya","Arjun","Yuki","Kenji","Sari","Bagas"),
   customer_service:  N("Sarah","James","Claire","Thomas","Isabella","Carlos","Amara","Marcus","Priya","Arjun","Mei","Wei","Siti","Budi"),
   bookstore_stranger:N("Elise","Owen","Léa","Hugo","Camila","Diego","Amara","Kwame","Ananya","Rohan","Hana","Jun","Putri","Rizky"),
   golf_partner:      N("A woman","Alistair","A woman","Charles","Isabella","A man","A woman","Marcus","Priya","A man","A woman","Kenji","Seseorang","Bagas"),
@@ -216,7 +217,7 @@ const generateChar = (roleKey, forcedGender = null, forcedEthnicity = null) => {
   const formalDark = ["interviewer","examiner","judge","journalist","auditor","board_member","investor","acquirer","reviewer","panelist","opponent","prosecutor","defense_lawyer","cross_examiner","critic","investigator","ceo","executive","regulator","official","diplomat","commissioner","dean","professor_academic","negotiator","vendor","partner","contractor","voter","shareholder","consumer","media_audience"];
   const formalWarm = ["client","customer"];
   const socialWarm = ["friend_female","best_friend","ex_partner","crush","romantic_interest","date","blind_date","parent","grandparent"];
-  const socialNeutral = ["friend_male","colleague","manager","subordinate","mentor","mentee","senior","junior","stranger","new_acquaintance","neighbor","classmate","alumni","host","guest","fellow_passenger","customer_service","sibling"];
+  const socialNeutral = ["friend_male","colleague","manager","subordinate","mentor","mentee","senior","junior","stranger","new_acquaintance","neighbor","classmate","alumni","host","guest","fellow_passenger","travel_companion","customer_service","sibling"];
   const idRoles = ["pak_rt","dosen_pembimbing","calon_mertua","senior_organisasi","teman_ospek","anggota_tim_debat"];
 
   let bodyColor = "#2A2520";
@@ -1319,7 +1320,7 @@ break;
         hideLegs = true; break;
 
       // ── Fellow passenger — bus/train seat interior ─────────────────────
-      case "fellow_passenger":
+      case "fellow_passenger": case "travel_companion":
         backProps = `
           <!-- Bus interior ceiling + overhead rack -->
           <rect x="0" y="0" width="160" height="240" fill="#0A0C10"/>
@@ -2735,7 +2736,7 @@ export default function Profess() {
         case "neighbor": case "classmate": case "alumni": case "subordinate":
         case "mentee": case "junior": case "teman_ospek": case "anggota_tim_debat":
         case "senior_organisasi": case "host": case "guest": case "fellow_passenger":
-        case "customer_service":
+        case "travel_companion": case "customer_service":
           voice = byName("Microsoft Mark - English (United States)"); break;
         // Formal composed — UK Male
         case "negotiator": case "client": case "customer": case "ceo": case "executive":
@@ -2807,7 +2808,7 @@ export default function Profess() {
         case "subordinate": case "mentee": case "junior":
           rate = 1.10; pitch = 1.02; volume = 0.88; break;
         // Stranger/acquaintance
-        case "stranger": case "fellow_passenger":
+        case "stranger": case "fellow_passenger": case "travel_companion":
           rate = 1.08; pitch = 0.94; volume = 0.88; break;
         case "new_acquaintance": case "neighbor": case "classmate": case "alumni":
         case "host": case "guest":
