@@ -560,6 +560,44 @@ function buildSVG(charOrKey, mood, isTalking, scene = "role") {
       case "defense_lawyer": case "investigator": case "official":
       case "dean": case "professor_academic":
         backProps = `
+          <!-- Office wall — light grey -->
+          <rect x="0" y="0" width="160" height="240" fill="#D8D4CE"/>
+          <!-- Window — city daylight -->
+          <rect x="90" y="8" width="62" height="90" rx="2" fill="#B8D4E8"/>
+          <rect x="90" y="8" width="62" height="90" rx="2" fill="none" stroke="#B0B8C0" stroke-width="1.5"/>
+          <line x1="121" y1="8"  x2="121" y2="98" stroke="#B0B8C0" stroke-width="1"/>
+          <line x1="90"  y1="49" x2="152" y2="49" stroke="#B0B8C0" stroke-width="1"/>
+          <!-- City skyline silhouette in window -->
+          <rect x="92"  y="60" width="8"  height="38" fill="#90A8BC" opacity=".5"/>
+          <rect x="103" y="50" width="6"  height="48" fill="#90A8BC" opacity=".4"/>
+          <rect x="112" y="55" width="10" height="43" fill="#90A8BC" opacity=".5"/>
+          <rect x="124" y="45" width="7"  height="53" fill="#90A8BC" opacity=".4"/>
+          <rect x="134" y="58" width="9"  height="40" fill="#90A8BC" opacity=".5"/>
+          <rect x="145" y="52" width="6"  height="46" fill="#90A8BC" opacity=".4"/>
+          <!-- Bookshelf left -->
+          <rect x="0" y="0" width="24" height="120" fill="#C8C0B4"/>
+          <rect x="0" y="118" width="24" height="3"  fill="#A8A098"/>
+          <!-- Book spines on shelf -->
+          <rect x="2"  y="6"  width="6" height="28" rx="1" fill="#4A6080"/>
+          <rect x="9"  y="6"  width="5" height="28" rx="1" fill="#805040"/>
+          <rect x="15" y="6"  width="7" height="28" rx="1" fill="#406050"/>
+          <rect x="2"  y="38" width="5" height="24" rx="1" fill="#604080"/>
+          <rect x="8"  y="38" width="7" height="24" rx="1" fill="#806040"/>
+          <rect x="16" y="38" width="6" height="24" rx="1" fill="#407060"/>
+          <rect x="2"  y="66" width="8" height="20" rx="1" fill="#804040"/>
+          <rect x="11" y="66" width="5" height="20" rx="1" fill="#408080"/>
+          <rect x="17" y="66" width="5" height="20" rx="1" fill="#606040"/>
+          <rect x="0"  y="88" width="24" height="3"  fill="#A8A098"/>
+          <rect x="3"  y="92" width="18" height="14" rx="1" fill="#B0A898"/>
+          <!-- Shelf divider line -->
+          <rect x="24" y="0" width="1" height="120" fill="#B0A898" opacity=".5"/>
+          <!-- Diploma / certificate frame -->
+          <rect x="30" y="10" width="52" height="38" rx="2" fill="#E8E0D0" stroke="#B0A068" stroke-width="1.5"/>
+          <rect x="34" y="14" width="44" height="30" rx="1" fill="#F0E8D8"/>
+          <line x1="36" y1="22" x2="76" y2="22" stroke="#C0A860" stroke-width=".8" opacity=".6"/>
+          <line x1="36" y1="28" x2="76" y2="28" stroke="#C0A860" stroke-width=".8" opacity=".4"/>
+          <line x1="36" y1="34" x2="76" y2="34" stroke="#C0A860" stroke-width=".8" opacity=".4"/>
+          <!-- Desk front bar -->
           <rect x="25" y="95" width="110" height="10" rx="4" fill="#2A1E14" stroke="#3A2A1C" stroke-width="1"/>
           <rect x="25" y="105" width="6" height="80" fill="#2A1E14"/>
           <rect x="129" y="105" width="6" height="80" fill="#2A1E14"/>
@@ -581,6 +619,25 @@ function buildSVG(charOrKey, mood, isTalking, scene = "role") {
       // ── Judge / legal bench ───────────────────────────────────────────
       case "judge": case "prosecutor": case "cross_examiner":
         backProps = `
+          <!-- Courtroom wall — dark oak panelling -->
+          <rect x="0" y="0" width="160" height="240" fill="#140E08"/>
+          <!-- Lower wood panel -->
+          <rect x="0" y="110" width="160" height="130" fill="#1C1208"/>
+          <!-- Panel dividers -->
+          <rect x="0"   y="110" width="160" height="3"  fill="#0E0A06"/>
+          <rect x="32"  y="113" width="2"   height="127" fill="#0E0A06" opacity=".6"/>
+          <rect x="80"  y="113" width="2"   height="127" fill="#0E0A06" opacity=".6"/>
+          <rect x="128" y="113" width="2"   height="127" fill="#0E0A06" opacity=".6"/>
+          <!-- Coat of arms / emblem on wall -->
+          <ellipse cx="80" cy="52" rx="24" ry="28" fill="#1A1408" stroke="#3A2A10" stroke-width="1.5"/>
+          <ellipse cx="80" cy="52" rx="18" ry="22" fill="#221A0A"/>
+          <polygon points="80,30 86,46 102,46 89,56 94,72 80,62 66,72 71,56 58,46 74,46" fill="#B89030" opacity=".7"/>
+          <!-- Flag poles flanking -->
+          <rect x="22" y="10" width="3" height="100" fill="#5A4020"/>
+          <rect x="22" y="10" width="26" height="18" fill="#2A3A6A" opacity=".85"/>
+          <rect x="135" y="10" width="3" height="100" fill="#5A4020"/>
+          <rect x="109" y="10" width="26" height="18" fill="#8A2020" opacity=".85"/>
+          <!-- Bench top bar -->
           <rect x="20" y="88" width="120" height="14" rx="4" fill="#1A1208"/>`;
         bodySVG = `<rect x="40" y="128" rx="8" width="80" height="92" fill="url(#outfitGrad)"/>
           <path d="M58 128 L80 150 L102 128 L94 128 L80 144 L66 128Z" fill="#243224"/>
@@ -600,6 +657,33 @@ function buildSVG(charOrKey, mood, isTalking, scene = "role") {
       case "acquirer": case "board_member": case "investor":
       case "partner": case "shareholder": case "colleague":
         backProps = `
+          <!-- Conference room — dark charcoal -->
+          <rect x="0" y="0" width="160" height="240" fill="#18181C"/>
+          <!-- Accent wall stripe -->
+          <rect x="0" y="0" width="160" height="6" fill="#2A2A32"/>
+          <!-- Floor-to-ceiling window right -->
+          <rect x="96" y="0" width="64" height="130" fill="#1A2230"/>
+          <rect x="96" y="0" width="64" height="130" fill="none" stroke="#2A3040" stroke-width="1.5"/>
+          <line x1="128" y1="0"  x2="128" y2="130" stroke="#2A3040" stroke-width="1"/>
+          <line x1="96"  y1="65" x2="160" y2="65"  stroke="#2A3040" stroke-width="1"/>
+          <!-- Night city in window -->
+          <rect x="98"  y="80"  width="5"  height="50" fill="#F0C840" opacity=".25"/>
+          <rect x="105" y="70"  width="4"  height="60" fill="#F0C840" opacity=".2"/>
+          <rect x="112" y="85"  width="6"  height="45" fill="#A0C0F0" opacity=".2"/>
+          <rect x="120" y="60"  width="5"  height="70" fill="#F0C840" opacity=".15"/>
+          <rect x="128" y="75"  width="7"  height="55" fill="#A0C0F0" opacity=".2"/>
+          <rect x="138" y="65"  width="4"  height="65" fill="#F0C840" opacity=".2"/>
+          <rect x="145" y="80"  width="6"  height="50" fill="#A0C0F0" opacity=".18"/>
+          <rect x="153" y="70"  width="5"  height="60" fill="#F0C840" opacity=".15"/>
+          <!-- Projector screen / whiteboard left -->
+          <rect x="4"  y="8"  width="86" height="56" rx="2" fill="#F0EEE8" opacity=".06"/>
+          <rect x="4"  y="8"  width="86" height="56" rx="2" fill="none" stroke="#2A2830" stroke-width="1"/>
+          <!-- Faint slide content -->
+          <rect x="10" y="14" width="40" height="5"  rx="1" fill="#4A5870" opacity=".5"/>
+          <rect x="10" y="22" width="60" height="3"  rx="1" fill="#3A4860" opacity=".3"/>
+          <rect x="10" y="27" width="50" height="3"  rx="1" fill="#3A4860" opacity=".25"/>
+          <rect x="10" y="32" width="55" height="3"  rx="1" fill="#3A4860" opacity=".2"/>
+          <!-- Conference table legs + top bar -->
           <rect x="15" y="90" width="130" height="16" rx="6" fill="#1A1614"/>
           <rect x="15" y="106" width="7" height="82" fill="#1A1614"/>
           <rect x="138" y="106" width="7" height="82" fill="#1A1614"/>
@@ -652,32 +736,37 @@ hideLegs = true;
 ) {
 
   backProps = `
+    <!-- Restaurant wall — deep burgundy -->
+    <rect x="0" y="0" width="160" height="240" fill="#1A0C0E"/>
+    <!-- Wall panels -->
+    <rect x="8"   y="12" width="62" height="120" rx="3" fill="none" stroke="#2E1A1C" stroke-width="1.5"/>
+    <rect x="90"  y="12" width="62" height="120" rx="3" fill="none" stroke="#2E1A1C" stroke-width="1.5"/>
+    <!-- Window — night city view -->
+    <rect x="18"  y="20" width="44" height="80" rx="2" fill="#0A0E18"/>
+    <rect x="18"  y="20" width="44" height="80" rx="2" fill="none" stroke="#3A2820" stroke-width="1"/>
+    <!-- Window pane dividers -->
+    <line x1="40" y1="20" x2="40" y2="100" stroke="#3A2820" stroke-width="1"/>
+    <line x1="18" y1="60" x2="62" y2="60" stroke="#3A2820" stroke-width="1"/>
+    <!-- City lights in window -->
+    <rect x="22" y="70" width="3" height="5" fill="#F0C860" opacity=".7"/>
+    <rect x="28" y="65" width="2" height="8" fill="#F0C860" opacity=".5"/>
+    <rect x="33" y="72" width="4" height="4" fill="#A0C0F0" opacity=".6"/>
+    <rect x="44" y="68" width="3" height="6" fill="#F0C860" opacity=".4"/>
+    <rect x="49" y="73" width="2" height="4" fill="#A0C0F0" opacity=".5"/>
+    <rect x="54" y="66" width="3" height="7" fill="#F0C860" opacity=".6"/>
+    <!-- Curtains -->
+    <path d="M16 20 Q12 40 14 100 L20 100 Q18 60 22 20Z" fill="#3A1820" opacity=".8"/>
+    <path d="M64 20 Q68 40 66 100 L60 100 Q62 60 58 20Z" fill="#3A1820" opacity=".8"/>
+    <!-- Wall sconce right -->
+    <rect x="108" y="55" width="6" height="14" rx="2" fill="#6A4820"/>
+    <ellipse cx="111" cy="54" rx="7" ry="5" fill="#D4A020"/>
+    <ellipse cx="111" cy="54" rx="18" ry="14" fill="#D4A020" opacity=".08"/>
     <!-- Hanging lamp wire -->
-    <line
-      x1="120"
-      y1="0"
-      x2="120"
-      y2="32"
-      stroke="#705020"
-      stroke-width="2"
-    />
-
+    <line x1="120" y1="0" x2="120" y2="32" stroke="#705020" stroke-width="2"/>
     <!-- Warm lamp -->
-    <circle
-      cx="120"
-      cy="40"
-      r="8"
-      fill="#D4A020"
-    />
-
+    <circle cx="120" cy="40" r="8" fill="#D4A020"/>
     <!-- Lamp glow -->
-    <circle
-      cx="120"
-      cy="40"
-      r="28"
-      fill="#D4A020"
-      opacity="0.12"
-    />
+    <circle cx="120" cy="40" r="28" fill="#D4A020" opacity="0.12"/>
   `;
 
   bodySVG = `
@@ -2024,10 +2113,10 @@ export default function Profess() {
       aboutPanel: (() => { const r = pick(["interviewer","journalist","colleague","friend_female"]); return { char: generateChar(r), role: r }; })(),
       termsPanel: generateChar("judge"),
       heroRow: [
-        generateChar("golf_partner"),
-        generateChar("padel_partner"),
-        generateChar("bookstore_stranger"),
-        generateChar("fellow_passenger"),
+        generateChar("date"),
+        generateChar("judge"),
+        generateChar("interviewer"),
+        generateChar("colleague"),
       ],
     };
   }
@@ -4155,7 +4244,7 @@ export default function Profess() {
 )}
 
   {heroRow.map((charObj, i) => {
-    const role = ["golf_partner","padel_partner","bookstore_stranger","fellow_passenger"][i];
+    const role = ["date","judge","interviewer","colleague"][i];
     const svg = heroSvgs[i];
 
     return (
