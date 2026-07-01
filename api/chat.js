@@ -100,7 +100,7 @@ export default async function handler(req, res) {
     text = await callNIM(apiKey, PRIMARY_MODEL, nimMessages, PRIMARY_TIMEOUT_MS);
   } catch (primaryErr) {
     const isTimeout = primaryErr.name === "AbortError";
-    const isServerError = [429, 500, 503, 529].includes(primaryErr.status);
+    const isServerError = [429, 500, 502, 503, 529].includes(primaryErr.status);
     if (isTimeout || isServerError) {
       console.error(`Primary model ${isTimeout ? "timed out" : "errored"}, trying fallback`);
       try {
