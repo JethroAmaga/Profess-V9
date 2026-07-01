@@ -21,16 +21,6 @@ function getSessionId() {
   }
 }
 
-// ─── System prompts ────────────────────────────────────────────────────────
-import enFormal from "./prompts/en.formal.js";
-import enSocial from "./prompts/en.social.js";
-import idFormal from "./prompts/id.formal.js";
-import idSocial from "./prompts/id.social.js";
-
-const PROMPTS = {
-  en: { formal: enFormal, social: enSocial },
-  id: { formal: idFormal, social: idSocial },
-};
 
 // ─── Character pool — diverse gender, ethnicity, names ────────────────────
 // Skin tones by ethnicity
@@ -2719,8 +2709,6 @@ export default function Profess() {
   };
 
   const callAPI = async (msgs, mode, language, intensityLevel) => {
-    const rawPrompt = PROMPTS[language||"en"][mode] || PROMPTS.en.formal;
-    const systemPrompt = rawPrompt.replace(/\{\{INTENSITY\}\}/g, intensityLevel || "challenging");
     const sessionId = getSessionId();
     const res = await fetch("/api/chat", {
       method: "POST",
@@ -2729,7 +2717,9 @@ export default function Profess() {
         ...(sessionId ? { "X-Profess-Session": sessionId } : {}),
       },
       body: JSON.stringify({
-        system: systemPrompt,
+        lang: language || "en",
+        mode: mode || "formal",
+        intensity: intensityLevel || "challenging",
         messages: msgs.map(m => ({ role: m.role==="assistant"?"assistant":"user", content: m.content }))
       }),
     });
