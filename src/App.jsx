@@ -4859,7 +4859,7 @@ export default function Profess() {
           { group:"Hukum & Publik", items:["Persidangan Mock Trial — Jaksa yang Tidak Memberi Celah","Debat Publik — Lawan yang Lebih Berpengalaman","Audiensi dengan Pejabat — Birokrasi yang Tidak Berpihak"] },
         ],
         en: [
-          { group:"Academic", items:["Thesis Defense — The Skeptical Examiner","Seminar Presentation — The Unconvinced Professor","Asian Parliamentary (AP) Debate — A Controversial Motion","British Parliamentary (BP) Debate — A Controversial Motion","Org Initiation — Senior Testing Your Limits"] },
+          { group:"Academic", items:["Thesis Defense — The Skeptical Examiner","Seminar Presentation — The Unconvinced Professor","Asian Parliamentary (AP) Debate — A Controversial Motion","Org Initiation — Senior Testing Your Limits"] },
           { group:"Career", items:["First Job Interview — The Critical HRD","Startup Pitch — 5 Minutes to Convince an Investor","Salary Negotiation — A Manager Who Won't Budge","Press Conference — An Aggressive Journalist","Client Meeting — The Decision Is Theirs"] },
           { group:"Legal & Public", items:["Mock Trial — A Prosecutor With No Mercy","Public Debate — An Opponent More Experienced Than You","Government Audience — Bureaucracy That Isn't On Your Side"] },
         ],
