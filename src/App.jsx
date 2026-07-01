@@ -1559,7 +1559,7 @@ function GlobeMarkerPoint({ lat, lng, radius, color }) {
 
 // Roles drawn from at random for the little SVG characters standing on the
 // globe's yellow dots — same generateChar/buildSVG pipeline as hero-char-row.
-const GLOBE_MARKER_ROLES = ["interviewer","colleague","crush","negotiator","journalist","ceo","judge","mentor","friend_female","manager","stranger","senior"];
+const GLOBE_MARKER_ROLES = ["interviewer","colleague","crush","negotiator","journalist","ceo","judge","mentor","friend_female","manager","stranger","senior","golf_partner","padel_partner","bookstore_stranger","travel_companion"];
 
 // Rough lat/lng → plausible ethnicity, just so a marker's character isn't
 // wildly mismatched with the region it's sitting on (not meant to be precise).
@@ -2284,10 +2284,10 @@ export default function Profess() {
       aboutPanel: (() => { const r = pick(["interviewer","journalist","colleague","friend_female"]); return { char: generateChar(r), role: r }; })(),
       termsPanel: generateChar("judge"),
       heroRow: [
-        generateChar("journalist"),
-        generateChar("opponent"),
+        generateChar("golf_partner"),
+        generateChar("padel_partner"),
         generateChar("date"),
-        generateChar("judge"),
+        generateChar("manager"),
       ],
     };
   }
@@ -3663,7 +3663,7 @@ export default function Profess() {
 
   // ── LANDING ────────────────────────────────────────────────────────────────
   if (screen === "landing") {
-    const heroRoleDesc = r => ({ interviewer:"Formal — interviews & performance reviews", reviewer:"Formal — interviews & performance reviews", auditor:"Formal — interviews & performance reviews", examiner:"Formal — thesis defense & academic sessions", professor_academic:"Formal — thesis defense & academic sessions", dean:"Formal — thesis defense & academic sessions", journalist:"Formal — press conferences & media training", critic:"Formal — press conferences & media training", judge:"Formal — mock trials & debate adjudication", prosecutor:"Formal — mock trials & debate adjudication", cross_examiner:"Formal — mock trials & debate adjudication", friend_female:"Social — reconnecting & casual conversation", friend_male:"Social — reconnecting & casual conversation", best_friend:"Social — reconnecting & casual conversation", colleague:"Social — workplace dynamics & office talk", manager:"Social — workplace dynamics & office talk", subordinate:"Social — workplace dynamics & office talk", crush:"Social — romantic & flirtatious situations", romantic_interest:"Social — romantic & flirtatious situations", date:"Social — romantic & flirtatious situations", stranger:"Social — first impressions & small talk", new_acquaintance:"Social — first impressions & small talk", negotiator:"Formal — pitching, negotiation & boardroom", ceo:"Formal — pitching, negotiation & boardroom", executive:"Formal — pitching, negotiation & boardroom", acquirer:"Formal — pitching, negotiation & boardroom", parent:"Social — family conversations", grandparent:"Social — family conversations", calon_mertua:"Social — family conversations", mentor:"Formal — mentorship & guidance sessions", senior:"Formal — mentorship & guidance sessions", golf_partner:"Situational — golf course networking", padel_partner:"Situational — padel court networking", bookstore_stranger:"Situational — bookstore encounter", fellow_passenger:"Situational — travel small talk" }[r] || "Available across all session types");
+    const heroRoleDesc = r => ({ interviewer:"Formal — interviews & performance reviews", reviewer:"Formal — interviews & performance reviews", auditor:"Formal — interviews & performance reviews", examiner:"Formal — thesis defense & academic sessions", professor_academic:"Formal — thesis defense & academic sessions", dean:"Formal — thesis defense & academic sessions", journalist:"Formal — press conferences & media training", critic:"Formal — press conferences & media training", judge:"Formal — mock trials & debate adjudication", prosecutor:"Formal — mock trials & debate adjudication", cross_examiner:"Formal — mock trials & debate adjudication", friend_female:"Social — reconnecting & casual conversation", friend_male:"Social — reconnecting & casual conversation", best_friend:"Social — reconnecting & casual conversation", colleague:"Social — workplace dynamics & office talk", manager:"Social — workplace dynamics & office talk", subordinate:"Social — workplace dynamics & office talk", crush:"Social — romantic & flirtatious situations", romantic_interest:"Social — romantic & flirtatious situations", date:"Social — romantic & flirtatious situations", stranger:"Social — first impressions & small talk", new_acquaintance:"Social — first impressions & small talk", negotiator:"Formal — pitching, negotiation & boardroom", ceo:"Formal — pitching, negotiation & boardroom", executive:"Formal — pitching, negotiation & boardroom", acquirer:"Formal — pitching, negotiation & boardroom", parent:"Social — family conversations", grandparent:"Social — family conversations", calon_mertua:"Social — family conversations", mentor:"Formal — mentorship & guidance sessions", senior:"Formal — mentorship & guidance sessions", golf_partner:"Situational — golf course networking", padel_partner:"Situational — padel court networking", bookstore_stranger:"Situational — bookstore encounter", fellow_passenger:"Situational — travel small talk", travel_companion:"Situational — travel small talk" }[r] || "Available across all session types");
     const { sofaLeft, sofaRight, beginPanel, aboutPanel, termsPanel, heroRow } = landingChars.current;
     const roomMaleMood = agitated.roomMale ? "uncomfortable" : roomMood;
     const roomFemaleMood = agitated.roomFemale ? "uncomfortable" : roomMood;
@@ -4415,7 +4415,7 @@ export default function Profess() {
 )}
 
   {heroRow.map((charObj, i) => {
-    const role = ["date","judge","interviewer","colleague"][i];
+    const role = charObj.roleKey;
     const svg = heroSvgs[i];
 
     return (
